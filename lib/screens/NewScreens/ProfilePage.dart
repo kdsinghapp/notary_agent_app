@@ -86,7 +86,7 @@ class _ProfileState extends State<ProfilePage>{
                       child:isSelectedFile?
                       Image.file(selectedFile!, fit:BoxFit.cover,width:80,height: 80,):
                       CachedNetworkImage(
-                        imageUrl:'${userProfileModel!.data![0].image}',height: 80, width: 80, fit: BoxFit.contain,
+                        imageUrl:'${userProfileModel!.data![0].image}',height: 80, width: 80, fit: BoxFit.cover,
                         placeholder: (BuildContext context, String url) =>Image.asset('assets/images/profile.png',height: 80, width: 80, fit: BoxFit.contain,),
                         errorWidget: (BuildContext context, String url, dynamic error) => Image.asset('assets/images/profile.png',height: 80, width: 80, fit: BoxFit.contain,),
                       ),
@@ -117,7 +117,7 @@ class _ProfileState extends State<ProfilePage>{
                 itemCount: 5,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                 itemSize: 20,
-                itemBuilder: (context, _) => Icon(
+                itemBuilder: (context, _) => const Icon(
                   Icons.star,
                   color: Colors.orange,
                   size: 10,

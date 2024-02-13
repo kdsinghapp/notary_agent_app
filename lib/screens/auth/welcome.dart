@@ -67,6 +67,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   popShowAccordingNotification(context, 'CANCEL_BY_USER');
                 }
                 if(data['type']=='PAYMENT_DONE'){
+                  GlobalLocalData data=GlobalLocalData();
+                  data.changePaymentStatus();
                   popShowAccordingNotification(context, 'PAYMENT_DONE');
                 }
 

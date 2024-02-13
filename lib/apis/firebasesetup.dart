@@ -189,6 +189,8 @@ class FirebasePushNotifications{
             popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'CANCEL_BY_USER');
           }
           if(data['type']=='PAYMENT_DONE'){
+            GlobalLocalData data=GlobalLocalData();
+            data.changePaymentStatus();
             popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'PAYMENT_DONE');
           }
 

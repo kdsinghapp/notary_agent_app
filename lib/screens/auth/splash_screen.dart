@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../import.dart';
 
 class SplashScreen extends HookWidget {
@@ -29,7 +31,9 @@ class SplashScreen extends HookWidget {
                     text: "Login",
                     color: CC.buttonGrey),
                 sbh(30),
-                AppButton(onTap: () {}, text: "Signup", color: CC.buttonGrey),
+                AppButton(onTap: () {
+                  signUpLaunchUrl();
+                }, text: "Signup", color: CC.buttonGrey),
                 sbh(50),
               ],
             ),
@@ -37,5 +41,11 @@ class SplashScreen extends HookWidget {
         ),
       ),
     );
+  }
+  Future<void> signUpLaunchUrl() async {
+    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../import.dart';
 
 class Login extends StatelessWidget {
@@ -13,6 +15,17 @@ class Login extends StatelessWidget {
         leading: const BackButton(),
         title: const Text("Login"),
       ),
+      bottomNavigationBar:Container(
+         padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+        child:   GestureDetector(
+          onTap: () {
+            //context.navigate(() => const Signup());
+            signUpLaunchUrl();
+          },
+          child: Text("Don’t have an account? Sign up now", style: const AppTextTheme(CC.white).display4,
+            textAlign:TextAlign.center ,),
+        ),
+      ) ,
       body: GetBuilder(
           init: LoginController(),
           builder: (LoginController controller) {
@@ -43,7 +56,7 @@ class Login extends StatelessWidget {
                       AppButton(onTap: () => controller.login(context), text: "Login", color: CC.buttonGrey, loading: controller.loading),
                       sbh(26),
                       Text("Forgot Password?", style: const AppTextTheme(CC.white).display4),
-                      sbh(20),
+                     /* sbh(20),
                       Text("Or", style: const AppTextTheme(CC.white).display4),
                       sbh(40),
                       Row(
@@ -53,12 +66,9 @@ class Login extends StatelessWidget {
                           sbw(60),
                           Image.asset('assets/images/facebook.png', height: 50, width: 50),
                         ],
-                      ),
-                      sbh(40),
-                      GestureDetector(
-                        onTap: () => context.navigate(() => const Signup()),
-                        child: Text("Don’t have an account? Sign up now", style: const AppTextTheme(CC.white).display4),
-                      ),
+                      ),  */
+                      //sbh(40),
+
                       sbh(20),
                     ],
                   ),
@@ -67,5 +77,11 @@ class Login extends StatelessWidget {
             );
           }),
     );
+  }
+  Future<void> signUpLaunchUrl() async {
+    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

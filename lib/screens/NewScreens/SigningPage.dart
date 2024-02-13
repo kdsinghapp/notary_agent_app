@@ -1,6 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:notary_agent_app/import.dart';
+import 'package:notary_agent_app/utils/global_local_data.dart';
 import 'package:notary_agent_app/widgets/ShowToast.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../apis/CustomSnackBar.dart';
@@ -387,114 +388,124 @@ class _SigningState extends State<SigningPage>{
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
+      child: GetBuilder<GlobalLocalData>(
+        init:GlobalLocalData() ,
+        builder: (value){
+          if(value.paymentComplete.value){
+           setState(() {
+
+           });
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        tabIndex=0;
-                        showProgressbar=true;
-                        getNewPendingBookingAll();
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(color:CC.primary,width: 1),
-                        color: tabIndex==0?CC.primary:Colors.white
-                      ),
-                      child: Center(
-                        child:CustomText(
-                          text: "Scheduled",
-                          textColor:tabIndex==0?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
-                      ),
-                    ),
+              Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            tabIndex=0;
+                            showProgressbar=true;
+                            getNewPendingBookingAll();
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              border: Border.all(color:CC.primary,width: 1),
+                              color: tabIndex==0?CC.primary:Colors.white
+                          ),
+                          child: Center(
+                            child:CustomText(
+                              text: "Scheduled",
+                              textColor:tabIndex==0?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
+                          ),
+                        ),
+                      )
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            tabIndex=1;
+                            showProgressbar=true;
+                            getNewPendingBookingAll();
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              border: Border.all(color:CC.primary,width: 1),
+                              color: tabIndex==1?CC.primary:Colors.white
+                          ),
+                          child: Center(
+                            child:CustomText(
+                              text: "On Signing",
+                              textColor:tabIndex==1?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
+                          ),
+                        ),
+                      )
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            tabIndex=2;
+                            showProgressbar=true;
+                            getNewPendingBookingAll();
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              border: Border.all(color:CC.primary,width: 1),
+                              color: tabIndex==2?CC.primary:Colors.white
+                          ),
+                          child: Center(
+                            child:CustomText(
+                              text: "Completed",
+                              textColor:tabIndex==2?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
+                          ),
+                        ),
+                      )
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            tabIndex=3;
+                            showProgressbar=true;
+                            getNewPendingBookingAll();
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: CC.primary,width: 1),
+                              color: tabIndex==3?CC.primary:Colors.white
+                          ),
+                          child: Center(
+                            child:CustomText(
+                              text: "Canceled",
+                              textColor:tabIndex==3?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
+                          ),
+                        ),
+                      )
                   )
+                ],
               ),
-              Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        tabIndex=1;
-                        showProgressbar=true;
-                        getNewPendingBookingAll();
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color:CC.primary,width: 1),
-                          color: tabIndex==1?CC.primary:Colors.white
-                      ),
-                      child: Center(
-                        child:CustomText(
-                          text: "On Signing",
-                          textColor:tabIndex==1?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
-                      ),
-                    ),
-                  )
-              ),
-              Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        tabIndex=2;
-                        showProgressbar=true;
-                        getNewPendingBookingAll();
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color:CC.primary,width: 1),
-                          color: tabIndex==2?CC.primary:Colors.white
-                      ),
-                      child: Center(
-                        child:CustomText(
-                          text: "Completed",
-                          textColor:tabIndex==2?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
-                      ),
-                    ),
-                  )
-              ),
-              Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        tabIndex=3;
-                        showProgressbar=true;
-                        getNewPendingBookingAll();
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: CC.primary,width: 1),
-                          color: tabIndex==3?CC.primary:Colors.white
-                      ),
-                      child: Center(
-                        child:CustomText(
-                          text: "Canceled",
-                          textColor:tabIndex==3?Colors.white: CC.primary,fontSize: 14,fontWeight: FontWeight.bold,),
-                      ),
-                    ),
-                  )
-              )
+              presentData?
+              showScheduledList():const Text("There are not present any signing list.",style: TextStyle(
+                fontSize: 16,fontWeight: FontWeight.normal,color: Colors.redAccent,),textAlign: TextAlign.center,)
             ],
-          ),
-          presentData?
-          showScheduledList():const Text("There are not present any signing list.",style: TextStyle(
-            fontSize: 16,fontWeight: FontWeight.normal,color: Colors.redAccent,),textAlign: TextAlign.center,)
-        ],
-      ),
+          );
+        },
+      )
     );
   }
 

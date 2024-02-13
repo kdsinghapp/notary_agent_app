@@ -738,15 +738,15 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
             ListTile(
               onTap: () {},
               leading: SizedBox(
-                  height: 64.0,
-                  width: 64.0, // fixed width and height
+                  height: 60.0,
+                  width: 60.0, // fixed width and height
                   child:  ClipRRect(
                     borderRadius:
-                    BorderRadius.circular(32.0),
+                    BorderRadius.circular(30.0),
                     child:CachedNetworkImage(
-                      imageUrl:'${driverData!.data!.image}',height: 63, width: 63, fit: BoxFit.contain,
-                      placeholder: (BuildContext context, String url) =>Image.asset('assets/images/profile.png',height: 63, width: 63, fit: BoxFit.contain,),
-                      errorWidget: (BuildContext context, String url, dynamic error) => Image.asset('assets/images/profile.png',height: 63, width: 63, fit: BoxFit.contain,),
+                      imageUrl:'${driverData!.data!.image}',height: 60, width: 60, fit: BoxFit.fill,
+                      placeholder: (BuildContext context, String url) =>Image.asset('assets/images/profile.png',height: 60, width: 60, fit: BoxFit.contain,),
+                      errorWidget: (BuildContext context, String url, dynamic error) => Image.asset('assets/images/profile.png',height: 60, width: 60, fit: BoxFit.contain,),
                     ),
                   ),
 
@@ -767,58 +767,48 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
               },
               leading: SizedBox(
                   height: 20.0,
-                  width: 20.0, // fixed width and height
+                  width: 20.0,
                   child: Image.asset('assets/images/1.png')),
-              title: CustomText(text: 'Home', textColor: Colors.white),
+              title: const CustomText(text: 'Home', textColor: Colors.white),
             ),
+
             ListTile(
               onTap: () {
                 context.pop();
-                context.navigate(() => BookingStatus());
+                context.navigate(() => const ChangePassword());
               },
               leading: SizedBox(
                   height: 20.0,
-                  width: 20.0, // fixed width and height
+                  width: 20.0,
                   child: Image.asset('assets/images/2.png')),
-              title: CustomText(text: 'Booking', textColor: Colors.white),
-            ),
-            ListTile(
-              onTap: () {
-                context.pop();
-                context.navigate(() => ChangePassword());
-              },
-              leading: SizedBox(
-                  height: 20.0,
-                  width: 20.0, // fixed width and height
-                  child: Image.asset('assets/images/2.png')),
-              title: CustomText(
+              title: const CustomText(
                   text: 'Change Password', textColor: Colors.white),
             ),
             ListTile(
               onTap: () {
                 context.pop();
-                context.navigate(() => MyWalletScreen());
+                context.navigate(() => const MyWalletScreen());
               },
               leading: SizedBox(
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/3.png')),
               title:
-              CustomText(text: 'My wallet', textColor: Colors.white),
+              const CustomText(text: 'My wallet', textColor: Colors.white),
             ),
             ListTile(
               onTap: () {
                 context.pop();
-                context.navigate(() => MySignings());
+                context.navigate(() => const MySignings());
               },
               leading: SizedBox(
                   height: 20.0,
                   width: 20.0, // fixed width and height
-                  child: Image.asset('assets/images/3.png')),
-              title: CustomText(
+                  child: Image.asset('assets/icons/signing_stering.png')),
+              title:const CustomText(
                   text: 'My Signings', textColor: Colors.white),
             ),
-            ListTile(
+           /* ListTile(
               onTap: () {
                 context.pop();
                 context.navigate(() => const CurrentShipping());
@@ -839,9 +829,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/5.png')),
-              title: CustomText(
-                  text: 'Emergency Contact', textColor: Colors.white),
-            ),
+              title: const CustomText(text: 'Emergency Contact', textColor: Colors.white),
+            ),  */
             ListTile(
               onTap: () {
                 context.pop();
@@ -851,8 +840,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/6.png')),
-              title:
-              CustomText(text: 'About Us', textColor: Colors.white),
+              title: const CustomText(text: 'About Us', textColor: Colors.white),
             ),
             ListTile(
               onTap: () {
@@ -863,7 +851,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/7.png')),
-              title: CustomText(text: 'Setting', textColor: Colors.white),
+              title: const CustomText(text: 'Setting', textColor: Colors.white),
             ),
             ListTile(
               onTap: () {
