@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:notary_agent_app/models/UserProfileModel.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../import.dart';
 import '../../apis/CustomSnackBar.dart';
 import '../../models/GetDriverChangeStatusModel.dart';
@@ -12,6 +14,8 @@ import '../../models/GetNewPendingBookingModel.dart';
 import '../../services/apiServices.dart';
 import '../../utils/auth.dart';
 import '../../widgets/ShowToast.dart';
+import '../NewScreens/NewChatingScreen.dart';
+import '../agent/MySignings.dart';
 class TrackSigning extends StatefulWidget{
   const TrackSigning({Key? key,required this.getNewPendingBookingData}) : super(key: key);
   final GetNewPendingBookingData getNewPendingBookingData;
@@ -52,31 +56,37 @@ class _TrackSigningState extends State<TrackSigning> {
     });
     _addMarker(
       LatLng(originLatitude, originLongitude),
-      "origin",
-      BitmapDescriptor.defaultMarker,
+      "origin"
     );
-
-    // Add destination marker
     _addMarker(
-      LatLng(originLatitude, originLongitude),
-      "destination",
-      BitmapDescriptor.defaultMarkerWithHue(90),
+      LatLng(double.parse(widget.getNewPendingBookingData.picuplat!), double.parse(widget.getNewPendingBookingData.pickuplon!)),
+    "destination"
     );
     // Add destination marker
     _addMarker(
-      LatLng(destLatitude, destLongitude),
-      "destination",
-      BitmapDescriptor.defaultMarkerWithHue(90),
+        LatLng(destLatitude, destLongitude),
+     // LatLng(double.parse(widget.getNewPendingBookingData.picuplat!), double.parse(widget.getNewPendingBookingData.pickuplon!)),
+      "destination"
     );
 
-    _getPolyline();
+    _getPolyline(double.parse(widget.getNewPendingBookingData.picuplat!),double.parse(widget.getNewPendingBookingData.pickuplon!));
   }
   // This method will add markers to the map based on the LatLng position
-  _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
+  _addMarker(LatLng position, String id) async{
     MarkerId markerId = MarkerId(id);
-    Marker marker =
-    Marker(markerId: markerId, icon: descriptor, position: position);
-    markers[markerId] = marker;
+    if(id=='origin'){
+      BitmapDescriptor descriptor= await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2),
+          "assets/icons/quic_car_.png");
+      Marker marker =
+      Marker(markerId: markerId, icon: descriptor, position: position);
+      markers[markerId] = marker;
+    }else{
+      BitmapDescriptor descriptor=  BitmapDescriptor.defaultMarker;
+      Marker marker =
+      Marker(markerId: markerId, icon: descriptor, position: position);
+      markers[markerId] = marker;
+    }
+
   }
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
@@ -222,11 +232,20 @@ class _TrackSigningState extends State<TrackSigning> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/msg.png",
-                                    height: 35,
-                                    width: 35,
-                                    fit: BoxFit.contain,
+                                  GestureDetector(
+                                    onTap: () async{
+                                      String agent_id=await getCurrentUserId();
+                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>
+                                          NewChatScreen(myId:agent_id,userId:userProfileModel!.data![0].id.toString(),
+                                            userFullName: '${userProfileModel!.data![0].firstName} ${userProfileModel!.data![0].firstName}',
+                                            userImage: '${userProfileModel!.data![0].image}',)));
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/msg.png",
+                                      height: 35,
+                                      width: 35,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                   Column(
                                     children: [
@@ -234,7 +253,7 @@ class _TrackSigningState extends State<TrackSigning> {
                                           borderRadius:
                                           BorderRadius.circular(40.0),
                                         child:CachedNetworkImage(
-                                          imageUrl:'${userProfileModel!.data![0].image}',height: 63, width: 63, fit: BoxFit.contain,
+                                          imageUrl:'${userProfileModel!.data![0].image}',height: 63, width: 63, fit: BoxFit.cover,
                                           placeholder: (BuildContext context, String url) =>Image.asset('assets/images/profile.png',height: 63, width: 63, fit: BoxFit.contain,),
                                           errorWidget: (BuildContext context, String url, dynamic error) => Image.asset('assets/images/profile.png',height: 63, width: 63, fit: BoxFit.contain,),
                                         ),
@@ -247,26 +266,36 @@ class _TrackSigningState extends State<TrackSigning> {
                                       )
                                     ],
                                   ),
-                                  Image.asset(
-                                    "assets/images/call.png",
-                                    height: 35,
-                                    width: 35,
-                                    fit: BoxFit.contain,
+                                  GestureDetector(
+                                    onTap: (){
+                                      callNumber(widget.getNewPendingBookingData.mobile!);
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/call.png",
+                                      height: 35,
+                                      width: 35,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ],
                               ),
-                             /* sbh(5),
+                              sbh(5),
                               Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/map.png",
-                                    height: 35,
-                                    width: 35,
-                                    fit: BoxFit.contain,
+                                  GestureDetector(
+                                    onTap: (){
+                                      launchGoogleApp(double.parse(widget.getNewPendingBookingData.picuplat!),double.parse(widget.getNewPendingBookingData.pickuplon!));
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/map.png",
+                                      height: 35,
+                                      width: 35,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
-                                  /* GestureDetector(
+                                  /*  GestureDetector(
                                     onTap: (){
                                       //context.navigate(() => AddRate());
                                     },
@@ -288,16 +317,21 @@ class _TrackSigningState extends State<TrackSigning> {
                                         print(rating);
                                       },
                                     ),
-                                  ),  */
-                                  SizedBox(width: 80,),
-                                  Image.asset(
-                                    "assets/images/calendar.png",
-                                    height: 35,
-                                    width: 35,
-                                    fit: BoxFit.contain,
+                                  ), */
+                                  const SizedBox(width: 80,),
+                                  GestureDetector(
+                                    onTap: (){
+                                      context.navigate(() => const MySignings());
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/calendar.png",
+                                      height: 35,
+                                      width: 35,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ],
-                              ),  */
+                              ),
                               sbh(10),
                             ],
                           ),
@@ -774,7 +808,7 @@ class _TrackSigningState extends State<TrackSigning> {
   }
 
   Widget MyGoogleMap (){
-    return  GoogleMap(
+    return /* GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: _kGooglePlex,
       myLocationEnabled: true,
@@ -791,7 +825,55 @@ class _TrackSigningState extends State<TrackSigning> {
         });
         //_controller.complete(controller);
       },
-    );
+    ); */
+      GoogleMap(
+        zoomControlsEnabled: false,
+        mapType: MapType.normal,
+        markers: Set<Marker>.of(markers.values),
+        polylines: Set<Polyline>.of(polylines.values),
+        // onCameraMove: controller.onCameraMove,
+        //initialCameraPosition:_kGooglePlex,
+        initialCameraPosition: CameraPosition(
+          target:  LatLng(double.parse(widget.getNewPendingBookingData.picuplat!), double.parse(widget.getNewPendingBookingData.pickuplon!)),
+          zoom: 15.0,
+        ),
+        // onMapCreated: (GoogleMapController mcontroller) async {
+        //   controller = xController;
+        //   if (xController != null) {
+        //     await xController!.animateCamera(
+        //       CameraUpdate.newLatLngZoom(startLocation.value, 16),
+        //     );
+        //   }
+        //   // controllerCompleter.complete(mcontroller);
+        //
+        //   // setState(() async {
+        //   //
+        //   // });
+        // },
+        onMapCreated: (controller) {
+          setState(() {
+            _controller = controller;
+            _zoomToLocation();
+          });
+        },
+        myLocationEnabled: true,
+        /*onTap: (LatLng location) {
+                setState(() {
+                  markers.clear();
+                  markers.add(
+                    Marker(
+                      markerId: MarkerId('tapped_location'),
+                      position: location,
+                      // infoWindow: InfoWindow(title: 'TODOapped Location'),
+                    ),
+                  );
+                });
+                // setState(() {
+              //  getAddressFromCoordinates(location.latitude, location.longitude);
+                startLocation.value = LatLng(location.latitude, location.longitude);
+                // });
+              },  */
+      );
   }
   void _zoomToLocation() async {
     if (_controller != null) {
@@ -817,12 +899,12 @@ class _TrackSigningState extends State<TrackSigning> {
     setState(() {});
   }
 
-  void _getPolyline() async {
-    print('Start polyline drawing ....');
+  void _getPolyline(double userLat,double userLong) async {
+    print('Start polyline drawing .... $userLat $userLong');
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyABk-AIzaSyCsAl96Phonf22z69GSDlYQOjlDO6NsiWk", //AIzaSyABk-0Al27H9Ap_Rtti2t0ePxOLvl5QFzk
+      "AIzaSyAUNuNPORcPgdycUwzGTEXU-PCyt2hVKtA",
       PointLatLng(originLatitude, originLongitude),
       PointLatLng(destLatitude, destLongitude),
       travelMode: TravelMode.driving,
@@ -837,7 +919,27 @@ class _TrackSigningState extends State<TrackSigning> {
     _addPolyLine(polylineCoordinates);
   }
 
+  void callNumber(String clientNumber) async {
+     String phoneNumber = 'tel:+91$clientNumber';
+     print("number:-$phoneNumber");
+    if (await canLaunch(phoneNumber)) {
+      await launch(phoneNumber);
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
 
+
+  launchGoogleApp(double latitude,double longitude) async {
+   // const double latitude = 37.4220;
+   // const double longitude = -122.0841;
+    final url = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
 }
 

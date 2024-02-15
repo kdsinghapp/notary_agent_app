@@ -122,7 +122,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
         getPop();
       });
     }else{
-      //getRecentPendingBookingApi();
+      getRecentPendingBookingApi();
     }
     addMarker(LatLng(22.234, 75.24546), "1",);
   }
@@ -695,10 +695,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
           data: {"agent_id":agent_id});
       print("res get driver new pending booking  ------------------${res.data}");
       final data = GetDriverPendingBookingModel.fromJson(res.data);
-      if (data.status == "true") {
+      if (data.status =="true") {
         showPop(data.data![0]);
       } else {
-        showSnackbar(context, "${data.message}");
+        //showSnackbar(context, "There are not present an");
+        showToastMessage('There are not present any recent booking request.');
       }
     } catch (e) {
       showError(context, e);

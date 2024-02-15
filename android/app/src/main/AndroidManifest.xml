@@ -12,6 +12,22 @@
 
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>
+        <!-- If your app checks for Google map app -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="google.navigation" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent>
+        <!-- If your app checks for SMS support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
+        <!-- If your app checks for call support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
         <!-- If your application checks for inAppBrowserView launch mode support -->
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService" />
@@ -50,7 +66,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyCsAl96Phonf22z69GSDlYQOjlDO6NsiWk"/>
+           android:value="AIzaSyAUNuNPORcPgdycUwzGTEXU-PCyt2hVKtA"/>
        <!--AIzaSyABk-0Al27H9Ap_Rtti2t0ePxOLvl5QFzk-->
     </application>
 </manifest>
