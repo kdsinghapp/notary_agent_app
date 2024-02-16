@@ -73,7 +73,7 @@ dependencies:
   flutter_localization: ^0.2.0
   circular_countdown_timer: ^0.2.3
   cached_network_image: ^3.2.3
-
+  flutter_html: ^3.0.0-beta.2
   #Shimmer loader viewer...
   shimmer: ^3.0.0
   fluttertoast: ^8.2.2

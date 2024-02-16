@@ -383,5 +383,7 @@ class ApiUrls {
   static const baseUrl = 'https://dcmdmobilenotary.com/laravel/api/';
 
   static const getProfile = baseUrl+'get_profile';
+  static const terms = baseUrl+'term_and_condition';
+  static const privacy = baseUrl+'privacy_policy';
 
 }

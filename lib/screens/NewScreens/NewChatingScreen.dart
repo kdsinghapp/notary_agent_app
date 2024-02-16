@@ -160,12 +160,12 @@ class _NewChatState extends State<NewChatScreen> {
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                   color: snapshot.data?.docs[index]["sendBy"] == widget.myId
-                      ? Colors.black38.withOpacity(0.1)
-                      : Colors.yellow),
+                      ? Colors.grey.withOpacity(0.3)
+                      : Colors.indigoAccent.withOpacity(0.2)),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment:snapshot.data?.docs[index]["sendBy"] == widget.myId?CrossAxisAlignment.end: CrossAxisAlignment.start,
                 children: [
                   Text(
                     snapshot.data?.docs[index]["message"],
@@ -182,7 +182,7 @@ class _NewChatState extends State<NewChatScreen> {
                         .toString(),
                     style: const TextStyle(color: Colors.black, fontSize: 10),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 1,
                   ),
                   Text(

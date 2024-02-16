@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notary_agent_app/import.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../apis/CustomSnackBar.dart';
 import '../../apis/interceptor.dart';
@@ -81,6 +82,18 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context: context, title: "My Wallet", elevation: 0,),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        height: 50,
+        margin: const EdgeInsets.only(left: 15,right: 15),
+        child: AppButton(
+          onTap: (){
+
+          },
+          text: 'Add stripe xpress',
+          borderRadius:const BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
       body:pageLoading?
       const Center(child: CircularProgressIndicator()):
       SingleChildScrollView(
@@ -145,7 +158,8 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
               sbh(20),
               presentData?
               showPaymentHistoryList():const Text("There are not present any transaction history.",style: TextStyle(
-                fontSize: 16,fontWeight: FontWeight.normal,color: Colors.redAccent,),textAlign: TextAlign.center,)
+                fontSize: 16,fontWeight: FontWeight.normal,color: Colors.redAccent,),textAlign: TextAlign.center,),
+              sbh(70),
 
             ],
           ),
