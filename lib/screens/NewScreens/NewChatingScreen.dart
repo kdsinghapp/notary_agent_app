@@ -165,7 +165,7 @@ class _NewChatState extends State<NewChatScreen> {
                       ? Colors.grey.withOpacity(0.3)
                       : Colors.indigoAccent.withOpacity(0.2)),
               child: Column(
-                crossAxisAlignment:snapshot.data?.docs[index]["sendBy"] == widget.myId?CrossAxisAlignment.end: CrossAxisAlignment.start,
+                crossAxisAlignment:snapshot.data?.docs[index]["sendBy"] == widget.myId?CrossAxisAlignment.start: CrossAxisAlignment.start,
                 children: [
                   Text(
                     snapshot.data?.docs[index]["message"],
@@ -174,22 +174,28 @@ class _NewChatState extends State<NewChatScreen> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    snapshot.data?.docs[index]["time"] == null
-                        ? ""
-                        : (DateFormat('HH:mm a').format(
-                        snapshot.data?.docs[index]["time"].toDate()))
-                        .toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 10),
-                  ),
-                  const SizedBox(
-                    height: 1,
-                  ),
-                  Text(
-                    snapshot.data?.docs[index]["time"] == null
-                        ? ""
-                        : getTimeAgo(snapshot.data?.docs[index]["time"]),
-                    style: const TextStyle(color: Colors.black, fontSize: 10),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment:snapshot.data?.docs[index]["sendBy"] == widget.myId?MainAxisAlignment.end: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data?.docs[index]["time"] == null
+                            ? ""
+                            : (DateFormat('HH:mm a').format(
+                            snapshot.data?.docs[index]["time"].toDate()))
+                            .toString(),
+                        style: const TextStyle(color: Colors.black, fontSize: 10),
+                      ),
+                      const SizedBox(
+                        width: 3,
+                      ),
+                      Text(
+                        snapshot.data?.docs[index]["time"] == null
+                            ? ""
+                            : getTimeAgo(snapshot.data?.docs[index]["time"]),
+                        style: const TextStyle(color: Colors.black, fontSize: 10),
+                      ),
+                    ],
                   ),
                 ],
               ),

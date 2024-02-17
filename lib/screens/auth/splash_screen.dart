@@ -20,8 +20,9 @@ class SplashScreen extends HookWidget {
                     height: context.height / 2,
                     width: context.width - 50,
                     fit: BoxFit.contain),
-                sbh(50),
-                Text('Driver', style: const AppTextTheme(CC.white).heading4),
+                sbh(10),
+                Text('AGENTS', style: const AppTextTheme(CC.white).heading2),
+                sbh(20)
               ],
             ),
             Column(

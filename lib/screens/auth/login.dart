@@ -1,6 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../import.dart';
+import '../agent/forgot_password.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -55,7 +56,15 @@ class Login extends StatelessWidget {
                       sbh(60),
                       AppButton(onTap: () => controller.login(context), text: "Login", color: CC.buttonGrey, loading: controller.loading),
                       sbh(26),
-                      Text("Forgot Password?", style: const AppTextTheme(CC.white).display4),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                          const ForgotPassword()));
+                        },
+                          child: Container(
+                            height: 40, width: double.infinity,
+                              alignment: Alignment.center,
+                              child: Text("Forgot Password?", style: const AppTextTheme(CC.white).display4))),
                      /* sbh(20),
                       Text("Or", style: const AppTextTheme(CC.white).display4),
                       sbh(40),

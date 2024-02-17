@@ -21,6 +21,7 @@ import '../../models/GetNewPendingBookingModel.dart';
 import '../../models/RequestNotificationInfoModel.dart';
 import '../../services/locationService.dart';
 import '../../widgets/ShowToast.dart';
+import '../agent/live_chat.dart';
 import '../home/home/HelpScreen.dart';
 import 'EarningPage.dart';
 import 'ProfilePage.dart';
@@ -820,18 +821,18 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   child: Image.asset('assets/images/4.png')),
               title: CustomText(
                   text: 'Current Shipping', textColor: Colors.white),
-            ),
+            ), */
             ListTile(
               onTap: () {
                 context.pop();
-                context.navigate(() => const ContactUs());
+                context.navigate(() => const LiveChat());
               },
               leading: SizedBox(
                   height: 20.0,
                   width: 20.0, // fixed width and height
-                  child: Image.asset('assets/images/5.png')),
-              title: const CustomText(text: 'Emergency Contact', textColor: Colors.white),
-            ),  */
+                  child: Image.asset('assets/images/6.png')),
+              title: const CustomText(text: 'Live Chat', textColor: Colors.white),
+            ),
             ListTile(
               onTap: () {
                 context.pop();
@@ -852,7 +853,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/7.png')),
-              title: const CustomText(text: 'Setting', textColor: Colors.white),
+              title: const CustomText(text: 'Settings', textColor: Colors.white),
             ),
             ListTile(
               onTap: () {

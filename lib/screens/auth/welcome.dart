@@ -9,6 +9,7 @@ import 'package:notary_agent_app/screens/NewScreens/NewDashboard.dart';
 import '../../apis/GlobalVariables.dart';
 import '../../apis/firebasesetup.dart';
 import '../../import.dart';
+import '../../services/locationService.dart';
 import '../../services/popShowAccordingNotification.dart';
 import '../../utils/auth.dart';
 import '../../utils/global_local_data.dart';
@@ -23,6 +24,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
   goto() async {
+    await getCurrentLocation();
     Timer(const Duration(seconds: 1), () async {
       if (await isUserLoggedIn()) {
         print("true");
@@ -98,9 +100,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    callingFirebasePushNotification();
     goto();
     super.initState();
+    callingFirebasePushNotification();
+
   }
 
   @override

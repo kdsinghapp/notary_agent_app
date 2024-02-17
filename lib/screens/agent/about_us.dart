@@ -1,4 +1,5 @@
 import 'package:notary_agent_app/import.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class AboutUsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     sbh(20),
-                    CustomText(
+                    const CustomText(
                       text: "More Information",
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
@@ -24,13 +25,13 @@ class AboutUsScreen extends StatelessWidget {
                     sbh(20),
                     ListTile(
                       onTap: () {
-                        // controller.contactus(context);
+                        myLauncherURL('https://dcmdmobilenotary.com/laravel/');
                       },
                       leading: SizedBox(
                           height: 20.0,
                           width: 20.0, // fixed width and height
                           child: Image.asset('assets/images/clip.png')),
-                      title: CustomText(
+                      title:const  CustomText(
                         text: 'http://www.notarymobility.com',
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -38,13 +39,13 @@ class AboutUsScreen extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        // controller.contactus(context);
+                        myLauncherURL('mailto:admin@notarymobility.com');
                       },
                       leading: SizedBox(
                           height: 20.0,
                           width: 20.0, // fixed width and height
                           child: Image.asset('assets/images/mail.png')),
-                      title: CustomText(
+                      title: const CustomText(
                         text: 'admin@notarymobility.com',
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -52,13 +53,13 @@ class AboutUsScreen extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        // controller.contactus(context);
+                        myLauncherURL('https://www.google.com/maps/search/?api=1&query=38.945760,-77.063920');
                       },
                       leading: SizedBox(
                           height: 20.0,
                           width: 20.0, // fixed width and height
                           child: Image.asset('assets/images/pinn.png')),
-                      title: CustomText(
+                      title: const CustomText(
                         text:
                             '4401-A Connecticut Ave Suite #777 Washington, DC. 20008',
                         fontSize: 15,
@@ -69,5 +70,13 @@ class AboutUsScreen extends StatelessWidget {
                 ));
           }),
     );
+  }
+
+
+  myLauncherURL(String myUrl) async {
+    final Uri url = Uri.parse(myUrl);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

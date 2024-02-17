@@ -12,9 +12,10 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
-  TextEditingController oldPass = new TextEditingController();
-  TextEditingController newPass = new TextEditingController();
-  TextEditingController conPass = new TextEditingController();
+  TextEditingController oldPass =  TextEditingController();
+  TextEditingController newPass = TextEditingController();
+  TextEditingController conPass =  TextEditingController();
+  bool btnLoading=false;
 
   changePassword() async {
     String userId = await getCurrentUserId();
@@ -26,7 +27,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       });
       // final resdata = UpdateOnlineStatus.fromJson(res as Map<String, dynamic>);
       // print("resdata is....${resdata.data}");
-      print("res from login data1 ------------------${res.data}");
+      print("res from change password ------------------${res.data}");
       print("status ------------------${res.data['status']}");
 
       print("data is....${ChangePasswordModel.fromJson(res.data)}");
@@ -42,6 +43,9 @@ class _ChangePasswordState extends State<ChangePassword> {
       showSnackbar(context,"$e");
       print(e);
     }
+    setState(() {
+      btnLoading=false;
+    });
   }
 
   @override
@@ -52,7 +56,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         context: context,
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -69,7 +73,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               sbh(MediaQuery.of(context).size.height * 0.05),
               AppTextFormField(
                 controller: oldPass,
-                placeholder: "Password",
+                placeholder: "Old Password",
                 validator: Validators.required,
                 obscureText: true,
                 //onSaved: (val) => controller.password = val!,
@@ -85,21 +89,26 @@ class _ChangePasswordState extends State<ChangePassword> {
               sbh(20),
               AppTextFormField(
                 controller: conPass,
-                placeholder: "Repeat Password",
+                placeholder: "Conform Password",
                 validator: Validators.required,
                 obscureText: true,
               ),
               sbh(60),
               AppButton(
                 onTap: () {
-                  if(newPass==conPass){
-                    changePassword();
+                  if(newPass.text==conPass.text){
+                    setState(() {
+                      btnLoading=true;
+                      changePassword();
+                    });
+
                   }
                   else{
                     showSnackbar(context, 'new password and confirm password should be same');
                   }
                 },
                 text: "CHANGE PASSWORD",
+                loading: btnLoading,
               )
             ],
           ),

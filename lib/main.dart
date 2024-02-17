@@ -101,6 +101,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: primarySwatch,
         ),
         home: WelcomeScreen(),
+        debugShowCheckedModeBanner: false,
         navigatorKey: MyGlobalKeys.navigatorKey,
       );
 
