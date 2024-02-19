@@ -13,6 +13,7 @@ import 'package:notary_agent_app/screens/agent/MyWallet.dart';
 import 'package:notary_agent_app/screens/home/currentShipping.dart';
 import 'package:notary_agent_app/utils/auth.dart';
 import 'package:notary_agent_app/utils/global_local_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../import.dart';
 import 'package:http/http.dart' as http;
@@ -41,11 +42,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
   bool switchh=false;
   bool pageLoading=true;
   String agent_id='';
-  //Set<Marker> get markers => {};
   Map<MarkerId, Marker> markers = {};
-  LatLng _initialposition = LatLng(22.234,75.24546);
-  LocationData? currentLocation;
-  LatLng _markerLocation = LatLng(0.0, 0.0); // Initial marker location
+  LatLng _initialposition = LatLng(startLocation.value.latitude,startLocation.value.latitude);
+  LocationData? currentLocation;// Initial marker location
   RequestNotificationInfoModel? requestNotificationInfoModel;
   List<GetNewPendingBookingData>? getNewPendingBookingData;
   RequestNotificationResult? requestIdModel;
@@ -125,16 +124,21 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
     }else{
       getRecentPendingBookingApi();
     }
-    addMarker(LatLng(22.234, 75.24546), "1",);
+    print("LatLng :-${startLocation.value.latitude},${startLocation.value.longitude}");
+    addMarker(LatLng(startLocation.value.latitude,startLocation.value.longitude), "1",);
   }
   getAllDriverData() async{
-    driverData= await getDriverDetails();
-    setState(() {
-      switchh=driverData!.data!.onlineStatus=='ONLINE'?true:false;
-      print('Online status---->>>>${driverData!.data!.onlineStatus}');
+    try {
+      driverData = await getDriverDetails();
+      setState(() {
+        switchh = driverData!.data!.onlineStatus == 'ONLINE' ? true : false;
+        print('Online status---->>>>${driverData!.data!.onlineStatus}');
 
-      pageLoading=false;
-    });
+        pageLoading = false;
+      });
+    }catch(e){
+      showError(context, 'Some thing is wrong ...');
+    }
   }
   addMarker(LatLng position, String id) async{
     BitmapDescriptor descriptor= await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 3.2),
@@ -856,6 +860,20 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
               title: const CustomText(text: 'Settings', textColor: Colors.white),
             ),
             ListTile(
+              onTap: () async{
+                context.pop();
+                final Uri url = Uri.parse(driverData!.data!.stripLoginLinkInStripeWebsite??'');
+                if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+                }
+              },
+              leading: SizedBox(
+                  height: 20.0,
+                  width: 20.0, // fixed width and height
+                  child: Image.asset('assets/images/card.png')),
+              title: const CustomText(text: 'Credit Card', textColor: Colors.white),
+            ),
+            ListTile(
               onTap: () {
                 logout();
                 context.pop();
@@ -865,7 +883,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   height: 20.0,
                   width: 20.0, // fixed width and height
                   child: Image.asset('assets/images/8.png')),
-              title: CustomText(text: 'Log Out', textColor: Colors.white),
+              title: const CustomText(text: 'Log Out', textColor: Colors.white),
             ),
           ],
         ),
@@ -1129,44 +1147,17 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
               // onCameraMove: controller.onCameraMove,
               initialCameraPosition: CameraPosition(
                 target: _initialposition,
-                zoom: 15.0,
+                zoom: 16.0,
               ),
-              // onMapCreated: (GoogleMapController mcontroller) async {
-              //   controller = xController;
-              //   if (xController != null) {
-              //     await xController!.animateCamera(
-              //       CameraUpdate.newLatLngZoom(startLocation.value, 16),
-              //     );
-              //   }
-              //   // controllerCompleter.complete(mcontroller);
-              //
-              //   // setState(() async {
-              //   //
-              //   // });
-              // },
+
               onMapCreated: (controller) {
+                //xController = controller;
                 setState(() {
                   xController = controller;
                   _zoomToLocation();
                 });
               },
               myLocationEnabled: true,
-              /*onTap: (LatLng location) {
-                setState(() {
-                  markers.clear();
-                  markers.add(
-                    Marker(
-                      markerId: MarkerId('tapped_location'),
-                      position: location,
-                      // infoWindow: InfoWindow(title: 'TODOapped Location'),
-                    ),
-                  );
-                });
-                // setState(() {
-              //  getAddressFromCoordinates(location.latitude, location.longitude);
-                startLocation.value = LatLng(location.latitude, location.longitude);
-                // });
-              },  */
             ),
             Positioned(
               bottom: 0,
@@ -1205,12 +1196,12 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
   void _zoomToLocation() async {
     if (xController != null) {
       final CameraPosition newPosition = CameraPosition(
-        target: _initialposition,
+        target: startLocation.value,
         zoom: 16.0, // Adjust the zoom level as needed
       );
 
-      await xController!
-          .animateCamera(CameraUpdate.newCameraPosition(newPosition));
+      await xController!.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+      print('zoom lat long :- ${startLocation.value}');
 
     }
   }

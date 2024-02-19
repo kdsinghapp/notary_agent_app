@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notary_agent_app/import.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../apis/CustomSnackBar.dart';
 import '../../apis/interceptor.dart';
 import '../../models/DriverPaymentHistoryModel.dart';
@@ -88,7 +89,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         margin: const EdgeInsets.only(left: 15,right: 15),
         child: AppButton(
           onTap: (){
-
+            myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
           },
           text: 'Add stripe xpress',
           borderRadius:const BorderRadius.all(Radius.circular(10)),
@@ -280,5 +281,12 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         );
       },
     );
+  }
+
+  myLauncherURL(String myUrl) async {
+    final Uri url = Uri.parse(myUrl);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

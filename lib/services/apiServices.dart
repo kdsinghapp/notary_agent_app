@@ -385,5 +385,7 @@ class ApiUrls {
   static const getProfile = baseUrl+'get_profile';
   static const terms = baseUrl+'term_and_condition';
   static const privacy = baseUrl+'privacy_policy';
+  static const updateLatLng = baseUrl+'update_latlong';
+  static const helpMe = baseUrl+'help_me';
 
 }

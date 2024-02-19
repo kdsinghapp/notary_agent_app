@@ -5,10 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notary_agent_app/screens/NewScreens/NewDashboard.dart';
-
+import 'dart:convert' as convert;
+import '../../apis/CustomSnackBar.dart';
 import '../../apis/GlobalVariables.dart';
 import '../../apis/firebasesetup.dart';
 import '../../import.dart';
+import '../../services/apiServices.dart';
 import '../../services/locationService.dart';
 import '../../services/popShowAccordingNotification.dart';
 import '../../utils/auth.dart';
@@ -28,14 +30,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Timer(const Duration(seconds: 1), () async {
       if (await isUserLoggedIn()) {
         print("true");
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => NewDashboardScreen(isRequest: false,)));
+        updateAgentLocation();
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => NewDashboardScreen(isRequest: false,)));
       } else {
         print("false");
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SplashScreen()));
       }
     });
+  }
+
+  Future<void> updateAgentLocation() async {
+    try {
+      String agent_id=await getCurrentUserId();
+    String url = '${ApiUrls.updateLatLng}?lat=${startLocation.value.latitude}&lon=${startLocation.value.longitude}&driver_id=$agent_id';
+    var res = await Webservices.getData(url);
+    var jsonResponse = convert.jsonDecode(res.body);
+    print("updateLatLng url ------------------${url}");
+    print("res from updateLatLng ------------------${jsonResponse}");
+    if (jsonResponse['status'] == "1") {
+      print('Successfully update agent LatLng...');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => NewDashboardScreen(isRequest: false,)));
+    } else {
+      print('Failed update agent LatLng...');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => NewDashboardScreen(isRequest: false,)));
+    }
+    } catch (e) {
+      print("Error:-"+e.toString());
+      showError(context, e.toString());
+    }
   }
   void callingFirebasePushNotification() async{
     if (Platform.isAndroid) {

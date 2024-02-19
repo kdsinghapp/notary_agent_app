@@ -13,7 +13,12 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CC.primary,
-        leading: const BackButton(),
+        leading:InkWell(
+          onTap: (){
+            context.pop(context);
+          },
+          child: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
+        ),
         title: const Text("Login"),
       ),
       bottomNavigationBar:Container(

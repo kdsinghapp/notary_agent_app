@@ -22,7 +22,7 @@ String googleApikey = "AIzaSyAUNuNPORcPgdycUwzGTEXU-PCyt2hVKtA";//AIzaSyB90Ml5dp
 // LatLng startLocation =  LatLng(22.234,75.24546);
 LatLng? endLocation;// Initial marker location
 final ValueNotifier<String> address = ValueNotifier<String>('');
-final ValueNotifier<LatLng> startLocation = ValueNotifier<LatLng>(LatLng(22.234,75.24546));
+final ValueNotifier<LatLng> startLocation = ValueNotifier<LatLng>(LatLng(22.719568,75.857727));
 
 void onMapCreated(GoogleMapController controller) {
   controller = controller;

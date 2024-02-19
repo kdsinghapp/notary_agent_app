@@ -1,4 +1,5 @@
 import 'package:notary_agent_app/apis/firebasesetup.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../import.dart';
 
@@ -65,24 +66,27 @@ class SignupController extends GetxController {
           "first_name": _firstName,
           "last_name": _lastName,
           "email": _email,
+          "phone":_mobile,
           "password": _password,
           "country": "Not Provided",
           "state": "Not Provided",
           "city": "Not Provided",
+          "type": "AGENT",
           "mobile": _mobile,
           "address": "Not Provided",
-          "type": "AGENT",
+          "online_status":"OFFLINE",
           "register_id":devicetoken  ,
           "device_type":device_type
         },
       );
       _loading = false;
-
+      print('SignUp responce:- ${res.data.toString()}');
       if(res.data['status']=="true"){
        // updateUserDetails()
         refresh();
         context.pop();
-        context.replace(() => const HomeDrawer());
+       // context.replace(() => const HomeDrawer());
+        signUpLaunchUrl();
       }
       else{
         showError(context, "can't signup");
@@ -92,6 +96,13 @@ class SignupController extends GetxController {
       _loading = false;
       refresh();
       showError(context, e);
+    }
+  }
+
+  Future<void> signUpLaunchUrl() async {
+    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

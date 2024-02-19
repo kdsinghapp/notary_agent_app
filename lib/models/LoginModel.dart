@@ -7,7 +7,7 @@ class LoginModel {
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data = json['data'] != null ? LoginData.fromJson(json['data']) : null;
+    data = json['status'] != "false" ? LoginData.fromJson(json['data']) : null;
     message = json['message'];
   }
 
@@ -45,7 +45,7 @@ class LoginData {
   String? yearOfManufacture;
   String? carImage;
   String? image;
-  String? status;
+  int? status;
   String? isAdmin;
   String? password;
   String? rememberToken;
@@ -143,6 +143,7 @@ class LoginData {
   String? agentStep5AdminComment;
   String? webTokenDevice;
   String? stripeCustomerId;
+  String? stripLoginLinkInStripeWebsite;
 
   LoginData(
       {this.id,
@@ -264,7 +265,8 @@ class LoginData {
         this.agentStep4AdminComment,
         this.agentStep5AdminComment,
         this.webTokenDevice,
-        this.stripeCustomerId});
+        this.stripeCustomerId,
+        this.stripLoginLinkInStripeWebsite});
 
   LoginData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -388,6 +390,7 @@ class LoginData {
     agentStep5AdminComment = json['agent_step_5_admin_comment'];
     webTokenDevice = json['web_token_device'];
     stripeCustomerId = json['stripe_customer_id'];
+    stripLoginLinkInStripeWebsite = json['strip_login_link_in_stripe_website'];
   }
 
   Map<String, dynamic> toJson() {
@@ -514,6 +517,10 @@ class LoginData {
     data['agent_step_5_admin_comment'] = agentStep5AdminComment;
     data['web_token_device'] = webTokenDevice;
     data['stripe_customer_id'] = stripeCustomerId;
+    data['strip_login_link_in_stripe_website'] =
+        stripLoginLinkInStripeWebsite;
     return data;
   }
 }
+
+
