@@ -226,8 +226,8 @@ class _TrackSigningState extends State<TrackSigning> {
                                 String agent_id=await getCurrentUserId();
                                 Navigator.push(context,MaterialPageRoute(builder: (context)=>
                                     NewChatScreen(myId:agent_id,userId:userProfileModel!.data![0].id.toString(),
-                                      userFullName: '${userProfileModel!.data![0].firstName} ${userProfileModel!.data![0].firstName}',
-                                      userImage: '${userProfileModel!.data![0].image}',)));
+                                      requestId: widget.getNewPendingBookingData.id.toString(),
+                                    )));
                               },
                               child: Image.asset(
                                 "assets/images/msg.png",

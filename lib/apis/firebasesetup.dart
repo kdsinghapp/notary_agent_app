@@ -15,6 +15,7 @@ import 'package:notary_agent_app/utils/global_local_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../LifecycleEventHandler.dart';
+import '../screens/NewScreens/NewChatingScreen.dart';
 import '../services/popShowAccordingNotification.dart';
 import '../utils/auth.dart';
 
@@ -188,11 +189,19 @@ class FirebasePushNotifications{
           if(data['type']=='CANCEL_BY_USER'){
             popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'CANCEL_BY_USER');
           }
+          if(data['type']=='REVIEWED_BY_USERS'){
+            popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'REVIEWED_BY_USERS');
+          }
+          if(data['type']=='CHAT'){
+            popChatNotification(MyGlobalKeys.navigatorKey.currentContext!,data['driverId'], data['userId'], data['request_id']);
+          }
+
           if(data['type']=='PAYMENT_DONE'){
             GlobalLocalData data=GlobalLocalData();
             data.changePaymentStatus();
             popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'PAYMENT_DONE');
           }
+
 
         }
       }catch(e){
@@ -215,6 +224,11 @@ class FirebasePushNotifications{
          GlobalLocalData.setRequestId(message.data['request_id'].toString());
         Navigator.push(MyGlobalKeys.navigatorKey.currentContext!,
             MaterialPageRoute(builder: (context)=>NewDashboardScreen(isRequest: true))) ;
+      }
+      if(message.data['type']=='CHAT'){
+        Navigator.push(MyGlobalKeys.navigatorKey.currentContext!,
+            MaterialPageRoute(builder: (context)=>NewChatScreen(userId: message.data['driverId'],myId: message.data['userId'],
+                requestId:message.data['request_id']))) ;
       }
     });
 

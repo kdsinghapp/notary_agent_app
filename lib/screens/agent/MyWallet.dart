@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notary_agent_app/import.dart';
+import 'package:quickly/quickly.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../apis/CustomSnackBar.dart';
@@ -12,6 +13,7 @@ import '../../utils/colors.dart';
 import '../../utils/util_funcs.dart';
 import '../../widgets/checkoutUI.dart';
 import '../../widgets/custom_appbar.dart';
+import '../NewScreens/AddStripeXpress.dart';
 import '../NewScreens/MyTransaction.dart';
 
 class MyWalletScreen extends StatefulWidget {
@@ -89,7 +91,9 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         margin: const EdgeInsets.only(left: 15,right: 15),
         child: AppButton(
           onTap: (){
-            myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>
+            const AddStripeXpress()));
+            //myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
           },
           text: 'Add stripe xpress',
           borderRadius:const BorderRadius.all(Radius.circular(10)),

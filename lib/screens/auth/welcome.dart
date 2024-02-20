@@ -15,6 +15,7 @@ import '../../services/locationService.dart';
 import '../../services/popShowAccordingNotification.dart';
 import '../../utils/auth.dart';
 import '../../utils/global_local_data.dart';
+import '../NewScreens/NewChatingScreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -90,9 +91,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Navigator.push(MyGlobalKeys.navigatorKey.currentContext!,
                       MaterialPageRoute(builder: (context)=>NewDashboardScreen(isRequest: true))) ;
                 }
+                if(data['type']=='CHAT'){
+                  Navigator.push(MyGlobalKeys.navigatorKey.currentContext!,
+                      MaterialPageRoute(builder: (context)=>NewChatScreen(userId: data['driverId'],myId: data['userId'],
+                      requestId:data['request_id']))) ;
+                }
 
                 if(data['type']=='CANCEL_BY_USER'){
                   popShowAccordingNotification(context, 'CANCEL_BY_USER');
+                }
+                if(data['type']=='REVIEWED_BY_USERS'){
+                  popShowAccordingNotification(context, 'REVIEWED_BY_USERS');
                 }
                 if(data['type']=='PAYMENT_DONE'){
                   GlobalLocalData data=GlobalLocalData();

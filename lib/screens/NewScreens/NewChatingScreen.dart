@@ -2,17 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-
+import 'package:notary_agent_app/services/send_notification_user.dart';
+import 'dart:convert' as convert;
+import '../../apis/CustomSnackBar.dart';
+import '../../models/UserProfileModel.dart';
+import '../../services/apiServices.dart';
 import '../../widgets/ShowToast.dart';
 import '../../widgets/custom_appbar.dart';
 
 class NewChatScreen extends StatefulWidget {
   final String userId;
-  final String userFullName;
-  final String userImage;
   final String myId;
+  final String requestId;
 
-  const NewChatScreen({Key? key,required this.myId, required this.userId, required this.userFullName, required this.userImage}) : super(key: key);
+
+  const NewChatScreen({Key? key,required this.myId, required this.userId, required this.requestId}) : super(key: key);
 
   @override
   State<NewChatScreen> createState() => _NewChatState();
@@ -20,8 +24,39 @@ class NewChatScreen extends StatefulWidget {
 
 class _NewChatState extends State<NewChatScreen> {
   TextEditingController messageController = TextEditingController();
-
+  bool pageLoading=true;
+  UserProfileModel? userProfileModel;
   final FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
+
+  @override
+  initState(){
+    super.initState();
+    getUserProfile();
+  }
+  Future<void> getUserProfile() async {
+     try {
+    String url = '${ApiUrls.getProfile}?user_id=${widget.userId.toString()}';
+    var res = await Webservices.getData(url);
+    var jsonResponse = convert.jsonDecode(res.body);
+    print("change status url ------------------${url}");
+    print("res from login data2 ------------------${jsonResponse}");
+    userProfileModel= UserProfileModel.fromJson(jsonResponse);
+    if (userProfileModel!.status == "true") {
+      print('Successfully get driver profile...');
+      setState(() {
+        pageLoading=false;
+      });
+
+    } else {
+      print('Failed get driver profile...');
+      showSnackbar(context,"${userProfileModel!.message}");
+    }
+    } catch (e) {
+      showSnackbar(context,"${e.toString()}");
+      print("Error:-"+e.toString());
+      //showError(context, e);
+    }
+  }
 
 
   Future<void> uploadToFirestore() async {
@@ -41,6 +76,7 @@ class _NewChatState extends State<NewChatScreen> {
         .collection("chats")
         .add(dataMap);
     messageController.clear();
+    sendPushNotification(userProfileModel!.data![0].registerId.toString(), widget.requestId,widget.myId,widget.userId);
     setState(() {});
   }
 
@@ -50,7 +86,10 @@ class _NewChatState extends State<NewChatScreen> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: appBar(context: context, title: "Chat With Client", elevation: 0,),
-      body:
+      body:pageLoading?
+         const  Center(
+            child: CircularProgressIndicator(),
+          ):
       Column(
         children: [
           const SizedBox(height: 3,),
@@ -59,12 +98,12 @@ class _NewChatState extends State<NewChatScreen> {
               borderRadius:
               BorderRadius.circular(30.0),
               child:CachedNetworkImage(
-                imageUrl:'${widget.userImage}',height: 60, width: 60, fit: BoxFit.cover,
+                imageUrl:'${userProfileModel!.data![0].image}',height: 60, width: 60, fit: BoxFit.cover,
                 placeholder: (BuildContext context, String url) =>Image.asset('assets/images/profile.png',height: 60, width: 60, fit: BoxFit.cover,),
                 errorWidget: (BuildContext context, String url, dynamic error) => Image.asset('assets/images/profile.png',height: 60, width: 60, fit: BoxFit.cover,),
               ),
             ),
-            title: Text(widget.userFullName,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black87),),
+            title: Text('${userProfileModel!.data![0].firstName} ${userProfileModel!.data![0].lastName}',style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black87),),
             subtitle: const Text('User',style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal,color: Colors.black87),),
 
           ),

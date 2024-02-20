@@ -6,14 +6,10 @@ import 'package:location/location.dart';
 import 'package:notary_agent_app/apis/CustomSnackBar.dart';
 import 'package:notary_agent_app/models/GetDriverChangeStatusModel.dart';
 import 'package:notary_agent_app/models/LoginModel.dart';
-import 'package:notary_agent_app/models/UserProfileModel.dart';
-import 'package:notary_agent_app/screens/agent/BookingStatus.dart';
 import 'package:notary_agent_app/screens/agent/MySignings.dart';
 import 'package:notary_agent_app/screens/agent/MyWallet.dart';
-import 'package:notary_agent_app/screens/home/currentShipping.dart';
 import 'package:notary_agent_app/utils/auth.dart';
 import 'package:notary_agent_app/utils/global_local_data.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../import.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +20,7 @@ import '../../services/locationService.dart';
 import '../../widgets/ShowToast.dart';
 import '../agent/live_chat.dart';
 import '../home/home/HelpScreen.dart';
+import 'AddStripeXpress.dart';
 import 'EarningPage.dart';
 import 'ProfilePage.dart';
 import 'SigningPage.dart';
@@ -862,10 +859,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
             ListTile(
               onTap: () async{
                 context.pop();
-                final Uri url = Uri.parse(driverData!.data!.stripLoginLinkInStripeWebsite??'');
-                if (!await launchUrl(url)) {
-                throw Exception('Could not launch $url');
-                }
+                context.navigate(() => const AddStripeXpress());
               },
               leading: SizedBox(
                   height: 20.0,
