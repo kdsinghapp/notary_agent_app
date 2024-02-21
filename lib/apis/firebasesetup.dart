@@ -178,6 +178,15 @@ class FirebasePushNotifications{
           );
           print('the payLoad is $data');
         }
+          if(data['type']=='CHAT'){
+            popChatNotification(MyGlobalKeys.navigatorKey.currentContext!,data['driverId'], data['userId'], data['request_id']);
+          }
+
+          if(data['type']=='PAYMENT_DONE'){
+            GlobalLocalData data=GlobalLocalData();
+            data.changePaymentStatus();
+            popShowAccordingNotification(MyGlobalKeys.navigatorKey.currentContext!, 'PAYMENT_DONE');
+          }
         }else{
 
           if(message.data['type']=='REQUEST'){

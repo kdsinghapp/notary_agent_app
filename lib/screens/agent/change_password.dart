@@ -15,6 +15,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController oldPass =  TextEditingController();
   TextEditingController newPass = TextEditingController();
   TextEditingController conPass =  TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
   bool btnLoading=false;
 
   changePassword() async {
@@ -53,65 +54,80 @@ class _ChangePasswordState extends State<ChangePassword> {
     return Scaffold(
       appBar: appBar(
         title: "Change Password",
-        context: context,
+        isCentre: true,
+        context: context,elevation: 0
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              sbh(MediaQuery.of(context).size.height * 0.05),
-              Container(
+      body:SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              color:CC.primary,
+              child: Image.asset(
+                "assets/images/logo.png",
                 height: 100,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  height: 100,
-                  fit: BoxFit.contain,
+                fit: BoxFit.contain,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+
+                    sbh(MediaQuery.of(context).size.height * 0.05),
+                    AppTextFormField(
+                      controller: oldPass,
+                      placeholder: "Old Password",
+                      validator: Validators.required,
+                      obscureText: true,
+                      //onSaved: (val) => controller.password = val!,
+                    ),
+                    sbh(20),
+                    AppTextFormField(
+                      controller: newPass,
+                      placeholder: "New Password",
+                      validator: Validators.required,
+                      obscureText: true,
+                      // onSaved: (val) => controller.newpassword = val!,
+                    ),
+                    sbh(20),
+                    AppTextFormField(
+                      controller: conPass,
+                      placeholder: "Conform Password",
+                      validator: Validators.required,
+                      obscureText: true,
+                    ),
+                    sbh(60),
+                    AppButton(
+                      onTap: () {
+                        if(formKey.currentState!.validate()){
+                          if(newPass.text==conPass.text){
+
+                            setState(() {
+                              btnLoading=true;
+                              changePassword();
+                            });
+
+                          }
+                          else{
+                            showSnackbar(context, 'new password and confirm password should be same');
+                          }
+                        } else{
+                          showSnackbar(context, 'Enter all field.');
+                        }
+
+                      },
+                      text: "CHANGE PASSWORD",
+                      loading: btnLoading,
+                    )
+                  ],
                 ),
               ),
-              sbh(MediaQuery.of(context).size.height * 0.05),
-              AppTextFormField(
-                controller: oldPass,
-                placeholder: "Old Password",
-                validator: Validators.required,
-                obscureText: true,
-                //onSaved: (val) => controller.password = val!,
-              ),
-              sbh(20),
-              AppTextFormField(
-                controller: newPass,
-                placeholder: "New Password",
-                validator: Validators.required,
-                obscureText: true,
-                // onSaved: (val) => controller.newpassword = val!,
-              ),
-              sbh(20),
-              AppTextFormField(
-                controller: conPass,
-                placeholder: "Conform Password",
-                validator: Validators.required,
-                obscureText: true,
-              ),
-              sbh(60),
-              AppButton(
-                onTap: () {
-                  if(newPass.text==conPass.text){
-                    setState(() {
-                      btnLoading=true;
-                      changePassword();
-                    });
-
-                  }
-                  else{
-                    showSnackbar(context, 'new password and confirm password should be same');
-                  }
-                },
-                text: "CHANGE PASSWORD",
-                loading: btnLoading,
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -45,7 +45,7 @@ class _TrackSigningState extends State<TrackSigning> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserProfile();
+
     print("data status -----"+widget.getNewPendingBookingData.status.toString());
     setState(() {
       bookingStatus=widget.getNewPendingBookingData.status??'Accept';
@@ -59,8 +59,11 @@ class _TrackSigningState extends State<TrackSigning> {
       LatLng(double.parse(widget.getNewPendingBookingData.picuplat!), double.parse(widget.getNewPendingBookingData.pickuplon!)),
     "destination"
     );
-
     _getPolyline(double.parse(widget.getNewPendingBookingData.picuplat!),double.parse(widget.getNewPendingBookingData.pickuplon!));
+
+    Future.delayed(const Duration(seconds: 1), () {
+      getUserProfile();
+    });
   }
   // This method will add markers to the map based on the LatLng position
   _addMarker(LatLng position, String id) async{
@@ -284,29 +287,6 @@ class _TrackSigningState extends State<TrackSigning> {
                                 fit: BoxFit.contain,
                               ),
                             ),
-                            /*  GestureDetector(
-                                    onTap: (){
-                                      //context.navigate(() => AddRate());
-                                    },
-                                    child: RatingBar.builder(
-                                      initialRating: 3,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      ignoreGestures: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                      itemSize: 20,
-                                      itemBuilder: (context, _) => Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: 10,
-                                      ),
-                                      onRatingUpdate: (rating) {
-                                        print(rating);
-                                      },
-                                    ),
-                                  ), */
                             const SizedBox(width: 80,),
                             GestureDetector(
                               onTap: (){
@@ -810,12 +790,12 @@ class _TrackSigningState extends State<TrackSigning> {
           zoom: 15.0,
         ),
         onMapCreated: (controller) {
-
           setState(() {
             _controller = controller;
             fitPolyline();
             //_zoomToLocation();
           });
+
         },
         myLocationEnabled: true,
       );
@@ -877,6 +857,8 @@ class _TrackSigningState extends State<TrackSigning> {
       });
 
       print('print complete polyline bounding ....');
+    }else{
+      print('print Failed polyline bounding ....');
     }
   }
   double _calculateZoomLevel(LatLngBounds bounds, List<LatLng> polyline) {

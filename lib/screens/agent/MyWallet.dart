@@ -15,6 +15,7 @@ import '../../widgets/checkoutUI.dart';
 import '../../widgets/custom_appbar.dart';
 import '../NewScreens/AddStripeXpress.dart';
 import '../NewScreens/MyTransaction.dart';
+import 'MySignings.dart';
 
 class MyWalletScreen extends StatefulWidget {
   const MyWalletScreen({Key? key}) : super(key: key);
@@ -86,17 +87,46 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
     return Scaffold(
       appBar: appBar(context: context, title: "My Wallet", elevation: 0,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
+      floatingActionButton: SizedBox(
         height: 50,
-        margin: const EdgeInsets.only(left: 15,right: 15),
-        child: AppButton(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>
-            const AddStripeXpress()));
-            //myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
-          },
-          text: 'Add stripe xpress',
-          borderRadius:const BorderRadius.all(Radius.circular(10)),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                onTap: (){
+                  context.navigate(() => const MySignings());
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                      color: Colors.blueAccent
+                  ),
+                  margin: const EdgeInsets.only(right: 2),
+                  child: const Text("My Signings",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                   textAlign: TextAlign.center,),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                onTap: (){
+                  context.navigate(() => const AddStripeXpress());
+
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(left: 2),
+                  decoration: const BoxDecoration(
+                    color: Colors.blueAccent
+                  ),
+                  child: const Text("Next Pay Check",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                    textAlign: TextAlign.center,),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body:pageLoading?
@@ -112,10 +142,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
               const SizedBox(height: 10,),
               Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  border: Border.all(color: Colors.indigo,width: 1)
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +158,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('My total balance',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blue),),
+                        const Text('Your current balance',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blue),),
                         Text('\$ ${myTotalBalance}',style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blue),)
                       ],
                     ),
