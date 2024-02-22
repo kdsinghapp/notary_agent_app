@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notary_agent_app/apis/errors.dart';
+import 'package:notary_agent_app/import.dart';
 import 'package:notary_agent_app/models/HelpModel.dart';
+import 'package:notary_agent_app/screens/NewScreens/OpenStripHere.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:convert' as convert;
 import '../../../services/apiServices.dart';
 import '../../../utils/colors.dart';
 import '../../models/LoginModel.dart';
+import '../../models/UserProfileModel.dart';
 import '../../utils/auth.dart';
 import '../../widgets/custom_appbar.dart';
 
@@ -22,18 +25,50 @@ class _AddStripeXpressState extends State<AddStripeXpress> {
   bool haveAccount=false;
   HelpModel? helpModel;
   late List<bool> questionStatusList ;
-  LoginModel? userProfileModel;
+  UserProfileModel? userProfileModel;
   @override
   initState(){
     super.initState();
-    getAllDriverData();
+    //getAllDriverData();
+    getUserProfile();
+  }
+  Future<void> getUserProfile() async {
+   // try {
+      String agent_id = await getCurrentUserId();
+      String url = '${ApiUrls.getProfile}?user_id=$agent_id';
+      var res = await Webservices.getData(url);
+      print("res ------------------${res.body}");
+      var jsonResponse = convert.jsonDecode(res.body);
+      print("change status url ------------------${url}");
+      print("res from login data2 ------------------${jsonResponse}");
+      userProfileModel = UserProfileModel.fromJson(jsonResponse);
+      if (userProfileModel!.status == "true") {
+        if(userProfileModel!.data![0].stripLoginLinkInStripeWebsite==null){
+          setState(() {
+            haveAccount=false;
+            pageLoading=false;
+          });
+        }else{
+          setState(() {
+            haveAccount=true;
+            pageLoading=false;
+          });
+        }
+      } else {
+        print('Failed get driver profile...');
+        showError(context, "${userProfileModel!.message}");
+      }
+    // }catch(e){
+    //   print('Catch Error ...${e.toString()}');
+    //   showError(context, "${e.toString()}");
+    // }
 
   }
-  getAllDriverData() async{
+  /*getAllDriverData() async{
     print("Start user name ...");
     userProfileModel= await getDriverDetails();
-    print("User Name :-"+userProfileModel!.data!.firstName!);
-    if(userProfileModel!.data!.stripLoginLinkInStripeWebsite!.isEmpty){
+    print("User Name :-${userProfileModel!.data!.firstName}");
+    if(userProfileModel!.data!.stripLoginLinkInStripeWebsite==null){
       setState(() {
         haveAccount=false;
         pageLoading=false;
@@ -47,7 +82,7 @@ class _AddStripeXpressState extends State<AddStripeXpress> {
 
     //getMyPaymentHistory(userProfileModel!.data!.id.toString());
 
-  }
+  }  */
   getHelpApi()async {
     try {
       final data = await Webservices.getMap(ApiUrls.helpMe);
@@ -94,7 +129,8 @@ class _AddStripeXpressState extends State<AddStripeXpress> {
             ),
             haveAccount?ListTile(
               onTap: (){
-                myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
+               // myLauncherURL(userProfileModel!.data![0].stripLoginLinkInStripeWebsite??'');
+                context.navigate(()=>OpenStripHere(stripUrl: userProfileModel!.data![0].stripLoginLinkInStripeWebsite??'', userId: userProfileModel!.data![0].id.toString()));
               },
               leading:const  Icon(Icons.add_circle,size: 25,color: Colors.grey,),
               horizontalTitleGap: 0.0,
@@ -103,9 +139,11 @@ class _AddStripeXpressState extends State<AddStripeXpress> {
               ),) ,
             ):
             ListTile(
-              onTap: (){
-                //myLauncherURL(userProfileModel!.data!.stripLoginLinkInStripeWebsite??'');
-              },
+              onTap: ()async {
+               // myLauncherURL(userProfileModel!.data![0].stripLoginLinkInStripeWebsite??'');
+                 await context.navigate(()=>OpenStripHere(stripUrl: userProfileModel!.data![0].stripLoginLinkInStripeWebsite??'', userId: userProfileModel!.data![0].id.toString()));
+
+                },
               leading:const Icon(Icons.add_circle,size: 25,color: Colors.grey,),
               horizontalTitleGap: 0.0,
               title:const Text("Add Merchant Account",style: TextStyle(
@@ -122,4 +160,5 @@ class _AddStripeXpressState extends State<AddStripeXpress> {
       throw Exception('Could not launch $url');
     }
   }
+
 }

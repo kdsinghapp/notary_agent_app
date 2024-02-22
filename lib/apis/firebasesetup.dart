@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../LifecycleEventHandler.dart';
 import '../screens/NewScreens/NewChatingScreen.dart';
+import '../screens/NewScreens/SigningPage.dart';
 import '../services/popShowAccordingNotification.dart';
 import '../utils/auth.dart';
 

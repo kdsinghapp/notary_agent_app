@@ -10,7 +10,7 @@ class UserProfileModel {
     if (json['data'] != null) {
       data = <UserProfileData>[];
       json['data'].forEach((v) {
-        data!.add(UserProfileData.fromJson(v));
+        data!.add(new UserProfileData.fromJson(v));
       });
     }
     message = json['message'];
@@ -148,6 +148,7 @@ class UserProfileData {
   String? agentStep5AdminComment;
   String? webTokenDevice;
   String? stripeCustomerId;
+  String? stripLoginLinkInStripeWebsite;
   double? review;
 
   UserProfileData(
@@ -271,6 +272,7 @@ class UserProfileData {
         this.agentStep5AdminComment,
         this.webTokenDevice,
         this.stripeCustomerId,
+        this.stripLoginLinkInStripeWebsite,
         this.review});
 
   UserProfileData.fromJson(Map<String, dynamic> json) {
@@ -395,6 +397,7 @@ class UserProfileData {
     agentStep5AdminComment = json['agent_step_5_admin_comment'];
     webTokenDevice = json['web_token_device'];
     stripeCustomerId = json['stripe_customer_id'];
+    stripLoginLinkInStripeWebsite = json['strip_login_link_in_stripe_website'];
     review = json['review'];
   }
 
@@ -522,6 +525,8 @@ class UserProfileData {
     data['agent_step_5_admin_comment'] = agentStep5AdminComment;
     data['web_token_device'] = webTokenDevice;
     data['stripe_customer_id'] = stripeCustomerId;
+    data['strip_login_link_in_stripe_website'] =
+        stripLoginLinkInStripeWebsite;
     data['review'] = review;
     return data;
   }

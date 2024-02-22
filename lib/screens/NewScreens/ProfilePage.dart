@@ -41,27 +41,37 @@ class _ProfileState extends State<ProfilePage>{
 
   }
   Future<void> getUserProfile() async {
-    String agent_id=await getCurrentUserId();
-    String url = '${ApiUrls.getProfile}?user_id=$agent_id';
-    var res = await Webservices.getData(url);
-    var jsonResponse = convert.jsonDecode(res.body);
-    print("change status url ------------------${url}");
-    print("res from login data2 ------------------${jsonResponse}");
-    userProfileModel= UserProfileModel.fromJson(jsonResponse);
-    if (userProfileModel!.status == "true") {
-      print('Successfully get driver profile...');
-      firstNameController.value=TextEditingValue(text: userProfileModel!.data![0].firstName??'');
-      lastNameController.value=TextEditingValue(text: userProfileModel!.data![0].lastName??'');
-      emailController.value=TextEditingValue(text: userProfileModel!.data![0].email??'');
-      phoneController.value=TextEditingValue(text: userProfileModel!.data![0].mobile??'');
-      addressController.value=TextEditingValue(text: userProfileModel!.data![0].address??'');
-      setState(() {
-        pageLoading=false;
-      });
-
-    } else {
-      print('Failed get driver profile...');
-      showSnackbar(context,"${userProfileModel!.message}");
+    try {
+      String agent_id = await getCurrentUserId();
+      String url = '${ApiUrls.getProfile}?user_id=$agent_id';
+      var res = await Webservices.getData(url);
+      print("res ------------------${res.body}");
+      var jsonResponse = convert.jsonDecode(res.body);
+      print("change status url ------------------${url}");
+      print("res from login data2 ------------------${jsonResponse}");
+      userProfileModel = UserProfileModel.fromJson(jsonResponse);
+      if (userProfileModel!.status == "true") {
+        print('Successfully get driver profile...');
+        firstNameController.value =
+            TextEditingValue(text: userProfileModel!.data![0].firstName ?? '');
+        lastNameController.value =
+            TextEditingValue(text: userProfileModel!.data![0].lastName ?? '');
+        emailController.value =
+            TextEditingValue(text: userProfileModel!.data![0].email ?? '');
+        phoneController.value =
+            TextEditingValue(text: userProfileModel!.data![0].mobile ?? '');
+        addressController.value =
+            TextEditingValue(text: userProfileModel!.data![0].address ?? '');
+        setState(() {
+          pageLoading = false;
+        });
+      } else {
+        print('Failed get driver profile...');
+        showSnackbar(context, "${userProfileModel!.message}");
+      }
+    }catch(e){
+      print('Catch Error ...');
+      showError(context, "${e.toString()}");
     }
 
   }

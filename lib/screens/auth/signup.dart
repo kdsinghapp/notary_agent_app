@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:notary_agent_app/screens/auth/upload_signup_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../import.dart';
@@ -22,7 +23,7 @@ class Signup extends StatelessWidget {
           },
           child: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
         ),
-        title: const Text("Signup"),
+        title: const Text("Registration"),
       ),
       body: SingleChildScrollView(
         child: GetBuilder(
@@ -112,8 +113,9 @@ class Signup extends StatelessWidget {
                     sbh(60),
                     AppButton(
                       onTap: () {
-                        controller.signup(context);
+                        //controller.signup(context);
                         //signUpLaunchUrl();
+                        context.navigate(() => const UploadSignUpProfile());
                       },
                       text: "Signup",
                       color: CC.buttonGrey,

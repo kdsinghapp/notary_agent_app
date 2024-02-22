@@ -43,7 +43,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   getAllDriverData() async{
     print("Start user name ...");
     userProfileModel= await getDriverDetails();
-    print("User Name :-"+userProfileModel!.data!.firstName!);
+    print("User Name :-${userProfileModel!.data!.firstName}");
     getMyPaymentHistory(userProfileModel!.data!.id.toString());
 
   }
@@ -70,7 +70,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
           presentData=false;
           showProgressbar=true;
         });
-        showSnackbar(context, "${data.message}");
+        showError(context, "${data.message}");
       }
     } catch (e) {
       setState(() {

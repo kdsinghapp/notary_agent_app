@@ -33,8 +33,8 @@ class SplashScreen extends HookWidget {
                     color: CC.buttonGrey),
                 sbh(30),
                 AppButton(onTap: () {
-                 // context.navigate(() => const Signup());
-                  signUpLaunchUrl();
+                  context.navigate(() => const Signup());
+                  //signUpLaunchUrl();
                 }, text: "Signup", color: CC.buttonGrey),
                 sbh(50),
               ],

@@ -867,6 +867,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen> {
                   child: Image.asset('assets/images/card.png')),
               title: const CustomText(text: 'Credit Card', textColor: Colors.white),
             ),
+
             ListTile(
               onTap: () {
                 logout();

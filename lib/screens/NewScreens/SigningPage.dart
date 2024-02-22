@@ -1,21 +1,14 @@
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'package:notary_agent_app/import.dart';
 import 'package:notary_agent_app/utils/global_local_data.dart';
 import 'package:notary_agent_app/widgets/ShowToast.dart';
 import 'package:shimmer/shimmer.dart';
+
 import '../../apis/CustomSnackBar.dart';
-import '../../apis/interceptor.dart';
 import '../../models/GetDriverChangeStatusModel.dart';
 import '../../models/GetNewPendingBookingModel.dart';
 import '../../utils/auth.dart';
-import '../../utils/colors.dart';
-import '../../utils/util_funcs.dart';
-import '../../widgets/checkoutUI.dart';
-import 'package:http/http.dart' as http;
-
-import '../home/tracking_signing.dart';
-
 class SigningPage extends StatefulWidget{
   const SigningPage({super.key});
   @override
@@ -32,11 +25,14 @@ class _SigningState extends State<SigningPage>{
   @override
   initState(){
     super.initState();
+    //myMethod();
     getNewPendingBookingAll();
   }
 
   getNewPendingBookingAll() async {
     try {
+       String test=GlobalLocalData.getRequestId();
+       print("test $test");
       final res = await api().post(apiEndPoint(tabIndex),
           data: {"agent_id": await getCurrentUserId()});
       print("res from login data2 ------------------${res.data}");
@@ -762,6 +758,23 @@ class _SigningState extends State<SigningPage>{
      showProgressbar =true;
      getNewPendingBookingAll();
    });
+  }
+
+  void myMethod() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message)async {
+      FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
+      try{
+        showProgressbar=true;
+        getNewPendingBookingAll();
+        showProgressbar=false;
+      }catch(e){
+        print('error in listening notifications $e');
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async{
+
+    });
   }
 
 }

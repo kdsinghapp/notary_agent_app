@@ -17,5 +17,6 @@ class GlobalLocalData extends GetxController{
      void changePaymentStatus(){
         paymentComplete.value=true;
         update();
+       //refresh();
     }
 }
