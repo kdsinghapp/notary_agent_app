@@ -1,8 +1,6 @@
 import 'package:notary_agent_app/import.dart';
-import 'package:notary_agent_app/models/ChangePasswordModel.dart';
 
 import '../../apis/CustomSnackBar.dart';
-import '../../utils/auth.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -12,8 +10,8 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ForgotPassword> {
-  TextEditingController email =  TextEditingController();
-  bool btnLoading=false;
+  TextEditingController email = TextEditingController();
+  bool btnLoading = false;
 
   callingForgotPassword() async {
     try {
@@ -25,18 +23,19 @@ class _ChangePasswordState extends State<ForgotPassword> {
 
       // final data = ChangePasswordModel.fromJson(res.data);
       // print("data is....$data");
-      if (res.data['status']== "1") {
-        showSnackbar(context,"Password changed successfully");
+      if (res.data['status'] == "1") {
+        showSnackbar(context,
+            "Please check your email box.Your new password have sended to this email id.");
         Navigator.pop(context);
       } else {
-        showSnackbar(context,"Password could't be changed successfully");
+        showSnackbar(context, "Password could't be changed successfully");
       }
     } catch (e) {
-      showSnackbar(context,"$e");
+      showSnackbar(context, "$e");
       print(e);
     }
     setState(() {
-      btnLoading=false;
+      btnLoading = false;
     });
   }
 
@@ -44,11 +43,7 @@ class _ChangePasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CC.primary,
-      appBar: appBar(
-        title: "Forgot Password",
-        context: context,
-        elevation: 0
-      ),
+      appBar: appBar(title: "Forgot Password", context: context, elevation: 0),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -66,8 +61,14 @@ class _ChangePasswordState extends State<ForgotPassword> {
               ),
               sbh(MediaQuery.of(context).size.height * 0.05),
               sbh(20),
-              const Text('After successfully completed forgot password .\n Please check your email box.',style: TextStyle(
-                fontWeight: FontWeight.normal,fontSize: 14,color: Colors.white),textAlign: TextAlign.center,),
+              const Text(
+                'After successfully completed forgot password .\n Please check your email box.',
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
               sbh(20),
               AppTextFormField(
                 controller: email,
@@ -79,13 +80,12 @@ class _ChangePasswordState extends State<ForgotPassword> {
               sbh(150),
               AppButton(
                 onTap: () {
-                  if(email.text.isNotEmpty){
+                  if (email.text.isNotEmpty) {
                     setState(() {
-                      btnLoading=true;
+                      btnLoading = true;
                       callingForgotPassword();
                     });
-
-                  }else{
+                  } else {
                     showError(context, 'Enter valid email.');
                   }
                 },

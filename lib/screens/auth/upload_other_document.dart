@@ -1,23 +1,22 @@
-import 'package:notary_agent_app/screens/auth/upload_other_document.dart';
+import 'package:notary_agent_app/screens/auth/signup_step3.dart';
 
 import '../../import.dart';
 import '../../widgets/dotted_border.dart';
 
-class UploadSignUpProfile extends StatefulWidget {
-  const UploadSignUpProfile({Key? key}) : super(key: key);
+class UploadOtherDocument extends StatefulWidget {
+  const UploadOtherDocument({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _UploadSignUpProfileState();
+    return _UploadOtherDocumentState();
   }
 }
 
-class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
-  int tabIndex = 0;
+class _UploadOtherDocumentState extends State<UploadOtherDocument> {
   bool btnLoading = false;
-  bool checkBox = false;
-  File? drivingLicense;
-  File? driverProfile;
+  File? bondFile;
+  File? licenseFile;
+  File? checkFile;
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -27,13 +26,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
           backgroundColor: CC.primary,
           leading: InkWell(
             onTap: () {
-              if (tabIndex == 1) {
-                setState(() {
-                  tabIndex = 0;
-                });
-              } else {
-                context.pop(context);
-              }
+              context.pop(context);
             },
             child: const Icon(
               Icons.arrow_back_ios,
@@ -42,16 +35,14 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
             ),
           ),
           title: const Text(
-            "Registration",
+            "Upload Other Documents",
             style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         body: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: tabIndex == 0
-                ? uploadDrivingLicenceImage()
-                : uploadDriverImage()));
+            child: uploadDrivingLicenceImage()));
   }
 
   Widget uploadDrivingLicenceImage() {
@@ -74,9 +65,9 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
               borderRadius: const BorderRadius.all(Radius.circular(12)),
               child: Stack(
                 children: [
-                  if (drivingLicense != null)
+                  if (bondFile != null)
                     Image.file(
-                      drivingLicense!,
+                      bondFile!,
                       height: 200,
                       width: 300,
                       fit: BoxFit.fill,
@@ -96,30 +87,20 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
                         ),
                         sbh(5),
                         const Text(
-                          'Click here to upload a \n photo.',
+                          'Click here to upload a \n copy of bond',
                           style: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                         sbh(5),
                         GestureDetector(
                           onTap: () async {
-                            /* File? image = await ImageCropPicker().pickImage(
-                                context,
-                                maxWidth: 300,
-                                maxHeight: 200);
-                            if (image != null) {
-                              setState(() {
-                                drivingLicense = image;
-                                print("Driver file ${drivingLicense!.path}");
-                              });
-                            }  */
                             getImage(0);
                           },
                           child: Container(
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 5),
+                                left: 10, right: 10, top: 4, bottom: 4),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -128,7 +109,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
                               color: Colors.white,
                             ),
                             child: const Text(
-                              'Upload Photo',
+                              'Upload bond',
                               style: TextStyle(
                                   color: Colors.black87, fontSize: 16),
                               textAlign: TextAlign.center,
@@ -149,19 +130,181 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
               children: [
                 sbh(20),
                 const Text(
-                  'To prevent delays, make sure your vehicle \n registration',
+                  'Copy of Bond (If not required in your state, attach a note in its place.)',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
+          ),
+          sbh(20),
+          DottedBorder(
+            borderType: BorderType.RRect,
+            color: Colors.white,
+            dashPattern: const [8, 4],
+            strokeWidth: 2,
+            radius: const Radius.circular(12),
+            //padding: EdgeInsets.all(6),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Stack(
+                children: [
+                  if (licenseFile != null)
+                    Image.file(
+                      licenseFile!,
+                      height: 200,
+                      width: 300,
+                      fit: BoxFit.fill,
+                    ),
+                  Container(
+                    height: 200,
+                    width: 300,
+                    color: Colors.grey.withOpacity(0.5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.photo_camera,
+                          color: Colors.black87,
+                          size: 40,
+                        ),
+                        sbh(5),
+                        const Text(
+                          'Click here to upload a \n copy of notary license',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        sbh(5),
+                        GestureDetector(
+                          onTap: () async {
+                            getImage(1);
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 150,
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 4, bottom: 4),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border:
+                                  Border.all(color: Colors.black87, width: 1),
+                              color: Colors.white,
+                            ),
+                            child: const Text(
+                              'Upload license',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                sbh(20),
+                const Text(
+                  'Copy of notary license is required for agent register.',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
+          ),
+          sbh(20),
+          DottedBorder(
+            borderType: BorderType.RRect,
+            color: Colors.white,
+            dashPattern: const [8, 4],
+            strokeWidth: 2,
+            radius: const Radius.circular(12),
+            //padding: EdgeInsets.all(6),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Stack(
+                children: [
+                  if (checkFile != null)
+                    Image.file(
+                      checkFile!,
+                      height: 200,
+                      width: 300,
+                      fit: BoxFit.fill,
+                    ),
+                  Container(
+                    height: 200,
+                    width: 300,
+                    color: Colors.grey.withOpacity(0.5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.photo_camera,
+                          color: Colors.black87,
+                          size: 40,
+                        ),
+                        sbh(5),
+                        const Text(
+                          'Click here to upload a \n copy of background check',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        sbh(5),
+                        GestureDetector(
+                          onTap: () async {
+                            getImage(2);
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 150,
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 4, bottom: 4),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border:
+                                  Border.all(color: Colors.black87, width: 1),
+                              color: Colors.white,
+                            ),
+                            child: const Text(
+                              'Upload check',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                sbh(20),
+                const Text(
+                  'Copy of Background Check required,\n E&0 (If not required in your state, attach a image note in its place.)',
                   style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
                 sbh(20),
                 const Text(
                   '* Is current (not expired)',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* Matches the vehicle on file with Lyft',
                   style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
@@ -183,205 +326,15 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
           sbh(60),
           AppButton(
             onTap: () {
-              //controller.signup(context);
-              //signUpLaunchUrl();
-              setState(() {
-                tabIndex = 1;
-              });
-            },
-            text: "SAVE",
-            color: Colors.indigoAccent,
-            loading: btnLoading,
-            borderRadius: BorderRadius.circular(25),
-          ),
-          sbh(20),
-        ],
-      ),
-    );
-  }
-
-  Widget uploadDriverImage() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Image.asset('assets/images/logo.png',
-              height: context.width / 4, fit: BoxFit.contain),
-          sbh(20),
-          DottedBorder(
-            borderType: BorderType.RRect,
-            color: Colors.white,
-            dashPattern: const [8, 4],
-            strokeWidth: 2,
-            radius: const Radius.circular(12),
-            //padding: EdgeInsets.all(6),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
-              child: Stack(
-                children: [
-                  if (driverProfile != null)
-                    Image.file(
-                      driverProfile!,
-                      height: 200,
-                      width: 300,
-                      fit: BoxFit.fill,
-                    ),
-                  Container(
-                    height: 200,
-                    width: 300,
-                    color: Colors.grey.withOpacity(0.3),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.photo_camera,
-                          color: Colors.black87,
-                          size: 40,
-                        ),
-                        sbh(5),
-                        const Text(
-                          'Click here to upload a \n photo.',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        sbh(5),
-                        GestureDetector(
-                          onTap: () {
-                            getImage(1);
-                          },
-                          child: Container(
-                            height: 30,
-                            width: 150,
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border:
-                                  Border.all(color: Colors.black87, width: 1),
-                              color: Colors.white,
-                            ),
-                            child: const Text(
-                              'Add driver photo',
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 16),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                sbh(20),
-                const Text(
-                  'Example Driver Photo',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                sbh(20),
-                Image.asset('assets/images/img_girl.jpg',
-                    height: context.width / 2, fit: BoxFit.contain),
-                sbh(30),
-                const Text(
-                  'Driver photo \n requirements',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(20),
-                const Text(
-                  '* Put on big smile',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* No hats,sunglasses, or Bluetooth  headsets',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* Keep entire head and both shoulders in \n the frame',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* No blurriness',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* Good lighting and a solid background',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(5),
-                const Text(
-                  '* Photo should be oriented horizontally like \n in the example',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.start,
-                ),
-                sbh(20),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: checkBox,
-                      onChanged: (v) {
-                        setState(() {
-                          checkBox = v!;
-                        });
-                      },
-                      side: const BorderSide(
-                        color: Colors.white,
-                      ),
-                      activeColor: Colors.green,
-                      checkColor: Colors.white,
-                    ),
-                    const Text(
-                      'I have read the requirements',
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.start,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          sbh(60),
-          AppButton(
-            onTap: () {
-              //controller.signup(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const UploadOtherDocument()));
+                      builder: (context) => const SignUpStep3Page()));
             },
             text: "SAVE",
             color: Colors.indigoAccent,
             loading: btnLoading,
             borderRadius: BorderRadius.circular(25),
-            disabled: !checkBox,
-            //enabled: checkBox,
           ),
           sbh(20),
         ],
@@ -393,11 +346,23 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      if (i == 0) {
-        print("Image :-${pickedFile.path}");
-        drivingLicense = File(pickedFile.path);
-      } else {
-        driverProfile = File(pickedFile.path);
+      print("Image :-${pickedFile.path}");
+      switch (i) {
+        case 0:
+          {
+            bondFile = File(pickedFile.path);
+          }
+          break;
+        case 1:
+          {
+            licenseFile = File(pickedFile.path);
+          }
+          break;
+        case 2:
+          {
+            checkFile = File(pickedFile.path);
+          }
+          break;
       }
     } else {
       print('No image selected.');

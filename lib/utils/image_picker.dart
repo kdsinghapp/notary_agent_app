@@ -21,7 +21,8 @@ class ImageCropPicker {
     CameraDevice preferredCameraDevice = CameraDevice.rear,
     CropAspectRatio? aspectRatio,
     ImageSource? source,
-    List<CropAspectRatioPreset> aspectRatioPresets = const <CropAspectRatioPreset>[
+    List<CropAspectRatioPreset> aspectRatioPresets =
+        const <CropAspectRatioPreset>[
       CropAspectRatioPreset.original,
       CropAspectRatioPreset.square,
       CropAspectRatioPreset.ratio3x2,
@@ -97,7 +98,8 @@ class ImageCropPicker {
     int? maxWidth,
     int? maxHeight,
     CropAspectRatio? aspectRatio,
-    List<CropAspectRatioPreset> aspectRatioPresets = const <CropAspectRatioPreset>[
+    List<CropAspectRatioPreset> aspectRatioPresets =
+        const <CropAspectRatioPreset>[
       CropAspectRatioPreset.original,
       CropAspectRatioPreset.square,
       CropAspectRatioPreset.ratio3x2,

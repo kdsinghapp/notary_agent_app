@@ -76,16 +76,15 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
             widget.label!,
             style: TextStyle(
               color: widget.labelColor ?? const Color(0xFF172331),
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              height: 1.5,
+              fontSize: 12,
+              fontWeight: FontWeight.normal,
+              height: 1.0,
             ),
           ),
-        if (widget.label != null) const SizedBox(height: 10),
+        if (widget.label != null) const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54,width: 1)
-          ),
+              border: Border.all(color: Colors.black54, width: 1)),
           child: TextFormField(
             validator: widget.validator,
             onChanged: widget.onChanged,

@@ -13,25 +13,35 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CC.primary,
-        leading:InkWell(
-          onTap: (){
+        leading: InkWell(
+          onTap: () {
             context.pop(context);
           },
-          child: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
         ),
         title: const Text("Login"),
       ),
-      bottomNavigationBar:Container(
-         padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
-        child:   GestureDetector(
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: GestureDetector(
           onTap: () {
-            //context.navigate(() => const Signup());
-            signUpLaunchUrl();
+            context.navigate(() => const Signup());
+            //signUpLaunchUrl();
           },
-          child: Text("Don’t have an account? Sign up now", style: const AppTextTheme(CC.white).display4,
-            textAlign:TextAlign.center ,),
+          child: SizedBox(
+            height: 40,
+            child: Text(
+              "Don’t have an account? Sign up now",
+              style: const AppTextTheme(CC.white).display4,
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-      ) ,
+      ),
       body: GetBuilder(
           init: LoginController(),
           builder: (LoginController controller) {
@@ -44,7 +54,8 @@ class Login extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       sbh(20),
-                      Image.asset('assets/images/logo.png', width: context.width - 60, fit: BoxFit.contain),
+                      Image.asset('assets/images/logo.png',
+                          width: context.width - 60, fit: BoxFit.contain),
                       sbh(40),
                       AppTextFormField(
                         placeholder: "Email",
@@ -59,18 +70,28 @@ class Login extends StatelessWidget {
                         onSaved: (val) => controller.password = val!,
                       ),
                       sbh(60),
-                      AppButton(onTap: () => controller.login(context), text: "Login", color: CC.buttonGrey, loading: controller.loading),
+                      AppButton(
+                          onTap: () => controller.login(context),
+                          text: "Login",
+                          color: CC.buttonGrey,
+                          loading: controller.loading),
                       sbh(26),
                       GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                          const ForgotPassword()));
-                        },
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgotPassword()));
+                          },
                           child: Container(
-                            height: 40, width: double.infinity,
+                              height: 40,
+                              width: double.infinity,
                               alignment: Alignment.center,
-                              child: Text("Forgot Password?", style: const AppTextTheme(CC.white).display4))),
-                     /* sbh(20),
+                              child: Text("Forgot Password?",
+                                  style:
+                                      const AppTextTheme(CC.white).display4))),
+                      /* sbh(20),
                       Text("Or", style: const AppTextTheme(CC.white).display4),
                       sbh(40),
                       Row(
@@ -92,8 +113,10 @@ class Login extends StatelessWidget {
           }),
     );
   }
+
   Future<void> signUpLaunchUrl() async {
-    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    final Uri url =
+        Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }

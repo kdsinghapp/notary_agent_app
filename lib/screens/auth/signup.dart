@@ -17,13 +17,21 @@ class Signup extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CC.primary,
-        leading:InkWell(
-          onTap: (){
+        leading: InkWell(
+          onTap: () {
             context.pop(context);
           },
-          child: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
         ),
-        title: const Text("Registration"),
+        title: const Text(
+          "Registration",
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: GetBuilder(
@@ -36,49 +44,58 @@ class Signup extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Image.asset('assets/images/logo.png',
+                        height: context.width / 2, fit: BoxFit.contain),
                     sbh(20),
-                    Image.asset('assets/images/logo.png', height: context.width / 2, fit: BoxFit.contain),
-                    sbh(40),
-                    AppTextFormField(placeholder: "First Name", validator: Validators.required, onSaved: (val) => controller.firstName = val!),
+                    AppTextFormField(
+                        placeholder: "First Name",
+                        validator: Validators.required,
+                        onSaved: (val) => controller.firstName = val!),
                     sbh(20),
-                    AppTextFormField(placeholder: "Last Name", validator: Validators.required, onSaved: (val) => controller.lastName = val!),
+                    AppTextFormField(
+                        placeholder: "Last Name",
+                        validator: Validators.required,
+                        onSaved: (val) => controller.lastName = val!),
                     sbh(20),
-                    AppTextFormField(placeholder: "Email", validator: Validators.required, onSaved: (val) => controller.email = val!),
+                    AppTextFormField(
+                        placeholder: "Email",
+                        validator: Validators.required,
+                        onSaved: (val) => controller.email = val!),
                     // sbh(20),
                     // AppTextFormField(placeholder: "Phone Number", validator: Validators.required, onSaved: (val) => controller.mobile = val!),
                     sbh(20),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(8))
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: IntlPhoneField(
-                        validator: (valid){
-                         return 'Phone Number';
+                        validator: (valid) {
+                          return 'Phone Number';
                         },
                         decoration: InputDecoration(
                           alignLabelWithHint: false,
                           hintText: 'Phone Number',
-                          floatingLabelStyle: const TextStyle(color: Color(0xFF9B9B9B)),
+                          floatingLabelStyle:
+                              const TextStyle(color: Color(0xFF9B9B9B)),
                           border: UnderlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.circular(inputRadius)),
-                          fillColor:Colors.white,
+                          fillColor: Colors.white,
                           filled: true,
                           labelStyle: const TextStyle(color: Color(0xFF7B6F72)),
                         ),
                         initialCountryCode: 'IN',
-                        onSaved:(phone) {
-                          controller.mobile='${phone!.countryCode}${phone.number}';
-                          print("Phone:-"+phone.countryCode.toString());
+                        onSaved: (phone) {
+                          controller.mobile =
+                              '${phone!.countryCode}${phone.number}';
+                          print("Phone:-" + phone.countryCode.toString());
                         },
                         onChanged: (phone) {
-                          controller.mobile='${phone.countryCode}${phone.number}';
-                          print("Phone:-"+phone.completeNumber);
+                          controller.mobile =
+                              '${phone.countryCode}${phone.number}';
+                          print("Phone:-" + phone.completeNumber);
                         },
-                        onCountryChanged: (countryCode){
-
-                        },
+                        onCountryChanged: (countryCode) {},
                       ),
                     ),
                     sbh(20),
@@ -94,18 +111,22 @@ class Signup extends StatelessWidget {
                     GestureDetector(
                       onTap: () => controller.checkBox = !controller.checkBox,
                       child: Container(
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(inputRadius)),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(inputRadius)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
                         child: Row(
                           children: [
-                            Checkbox(value: controller.checkBox, onChanged: (v) => controller.checkBox = v!),
+                            Checkbox(
+                                value: controller.checkBox,
+                                onChanged: (v) => controller.checkBox = v!),
                             sbw(10),
                             Expanded(
-                              child:
-                              // Text("Terms of use and the data is processed on the terms of the Priacy Policy for the purpose specified in the questions are",
-                              //   style: const AppTextTheme(CC.grey1).heading6,),
-                              myRichText(context)
-                            ),
+                                child:
+                                    // Text("Terms of use and the data is processed on the terms of the Priacy Policy for the purpose specified in the questions are",
+                                    //   style: const AppTextTheme(CC.grey1).heading6,),
+                                    myRichText(context)),
                           ],
                         ),
                       ),
@@ -132,9 +153,14 @@ class Signup extends StatelessWidget {
       ),
     );
   }
+
   Widget myRichText(BuildContext context) {
-    TextStyle defaultStyle = const TextStyle(color: Colors.grey, fontSize: 16.0);
-    TextStyle linkStyle = const TextStyle(color: Colors.indigoAccent,fontSize: 16.0,fontWeight: FontWeight.bold);
+    TextStyle defaultStyle =
+        const TextStyle(color: Colors.grey, fontSize: 16.0);
+    TextStyle linkStyle = const TextStyle(
+        color: Colors.indigoAccent,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold);
     return RichText(
       text: TextSpan(
         style: defaultStyle,
@@ -147,7 +173,8 @@ class Signup extends StatelessWidget {
                   print('Terms of Service"');
                   context.navigate(() => const TermsScreen());
                 }),
-          const TextSpan(text: ' and the data is processed on the terms of the '),
+          const TextSpan(
+              text: ' and the data is processed on the terms of the '),
           TextSpan(
               text: 'Privacy Policy',
               style: linkStyle,
@@ -156,14 +183,16 @@ class Signup extends StatelessWidget {
                   print('Privacy Policy"');
                   context.navigate(() => const PrivacyScreen());
                 }),
-          const TextSpan(text: ' for the purpose specified in the questions are'),
+          const TextSpan(
+              text: ' for the purpose specified in the questions are'),
         ],
       ),
     );
   }
 
   Future<void> signUpLaunchUrl() async {
-    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    final Uri url =
+        Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
