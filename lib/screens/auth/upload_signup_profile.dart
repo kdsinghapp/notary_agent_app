@@ -1,11 +1,13 @@
+import 'package:http/http.dart' as http;
 import 'package:notary_agent_app/screens/auth/upload_other_document.dart';
 
 import '../../import.dart';
+import '../../utils/auth.dart';
+import '../../utils/http_methods.dart';
 import '../../widgets/dotted_border.dart';
 
 class UploadSignUpProfile extends StatefulWidget {
   const UploadSignUpProfile({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() {
     return _UploadSignUpProfileState();
@@ -18,6 +20,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
   bool checkBox = false;
   File? drivingLicense;
   File? driverProfile;
+  Map<String, dynamic> bodyParamsForNormalSignUpForm = {};
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -96,30 +99,20 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
                         ),
                         sbh(5),
                         const Text(
-                          'Click here to upload a \n photo.',
+                          'Click here to upload a \n Driver\'s License.',
                           style: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                         sbh(5),
                         GestureDetector(
                           onTap: () async {
-                            /* File? image = await ImageCropPicker().pickImage(
-                                context,
-                                maxWidth: 300,
-                                maxHeight: 200);
-                            if (image != null) {
-                              setState(() {
-                                drivingLicense = image;
-                                print("Driver file ${drivingLicense!.path}");
-                              });
-                            }  */
                             getImage(0);
                           },
                           child: Container(
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 5),
+                                left: 10, right: 10, top: 3, bottom: 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -149,7 +142,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
               children: [
                 sbh(20),
                 const Text(
-                  'To prevent delays, make sure your vehicle \n registration',
+                  'Make sure your Driver\'s License is not expired and avoid using flash so that your information is clear and visible.',
                   style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
@@ -183,13 +176,15 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
           sbh(60),
           AppButton(
             onTap: () {
-              //controller.signup(context);
-              //signUpLaunchUrl();
-              setState(() {
-                tabIndex = 1;
-              });
+              if (drivingLicense != null) {
+                setState(() {
+                  tabIndex = 1;
+                });
+              } else {
+                showError(context, 'Please select Driver\'s license');
+              }
             },
-            text: "SAVE",
+            text: "Next",
             color: Colors.indigoAccent,
             loading: btnLoading,
             borderRadius: BorderRadius.circular(25),
@@ -255,7 +250,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 5),
+                                left: 10, right: 10, top: 3, bottom: 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -370,11 +365,20 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
           sbh(60),
           AppButton(
             onTap: () {
+              if (driverProfile != null && drivingLicense != null) {
+                setState(() {
+                  btnLoading = true;
+                  List<File>? files = [drivingLicense!, driverProfile!];
+                  uploadProfileApi(files);
+                });
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => const UploadOtherDocument()));
+              } else {
+                showError(context, 'Please select driver profile');
+              }
               //controller.signup(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UploadOtherDocument()));
             },
             text: "SAVE",
             color: Colors.indigoAccent,
@@ -403,5 +407,49 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
       print('No image selected.');
     }
     setState(() {});
+  }
+
+  Future<void> uploadProfileApi(List<File>? selectedFile) async {
+    try {
+      bodyParamsForNormalSignUpForm = {
+        'agent_id': await getCurrentUserId(),
+      };
+      print("bodyParamsForNormalSignUpForm:::::$bodyParamsForNormalSignUpForm");
+      http.Response? response = await editProfileApi(
+          bodyParams: bodyParamsForNormalSignUpForm, image: selectedFile);
+      print(
+          "upload signup profile images ------------------${response!.statusCode}");
+      print("upload signup profile images ------------------${response!.body}");
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
+      if (jsonData['status'] == '1') {
+        context.replace(() => UploadOtherDocument());
+      } else {
+        print("False" + jsonData['message']);
+        showError(context, jsonData['message']);
+      }
+    } catch (e) {
+      print("Error:-" + e.toString());
+      showError(context, e);
+    }
+
+    setState(() {
+      btnLoading = false;
+    });
+  }
+
+  /// Edit Profile  Api Calling .....
+  static Future<http.Response?> editProfileApi(
+      {void Function(int)? checkResponse,
+      Map<String, dynamic>? bodyParams,
+      List<File>? image}) async {
+    http.Response? response = await MyHttp.multipart(
+        bodyParams: bodyParams,
+        url: 'https://dcmdmobilenotary.com/laravel/api/new_agent_quick_step_1',
+        images: image,
+        imageKey: 'attachment[]'
+        //checkResponse: checkResponse,
+        );
+    print("image response:-" + response!.body.toString());
+    return response;
   }
 }

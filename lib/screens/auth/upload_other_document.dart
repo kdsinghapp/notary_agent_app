@@ -1,6 +1,9 @@
+import 'package:http/http.dart' as http;
 import 'package:notary_agent_app/screens/auth/signup_step3.dart';
 
 import '../../import.dart';
+import '../../utils/auth.dart';
+import '../../utils/http_methods.dart';
 import '../../widgets/dotted_border.dart';
 
 class UploadOtherDocument extends StatefulWidget {
@@ -17,6 +20,7 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
   File? bondFile;
   File? licenseFile;
   File? checkFile;
+  Map<String, dynamic> bodyParamsForOtherDocumentationForm = {};
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -100,7 +104,7 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 4, bottom: 4),
+                                left: 10, right: 10, top: 3, bottom: 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -184,7 +188,7 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 4, bottom: 4),
+                                left: 10, right: 10, top: 3, bottom: 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -268,7 +272,7 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
                             height: 30,
                             width: 150,
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 4, bottom: 4),
+                                left: 10, right: 10, top: 3, bottom: 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
@@ -326,10 +330,21 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
           sbh(60),
           AppButton(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignUpStep3Page()));
+              if (bondFile != null &&
+                  licenseFile != null &&
+                  checkFile != null) {
+                List<File> files = [bondFile!, licenseFile!, checkFile!];
+                setState(() {
+                  btnLoading = true;
+                  uploadOtherDocumentsApi(files);
+                });
+              } else {
+                showError(context, 'Select all files...');
+              }
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => const SignUpStep3Page()));
             },
             text: "SAVE",
             color: Colors.indigoAccent,
@@ -368,5 +383,50 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
       print('No image selected.');
     }
     setState(() {});
+  }
+
+  Future<void> uploadOtherDocumentsApi(List<File>? selectedFile) async {
+    try {
+      bodyParamsForOtherDocumentationForm = {
+        'agent_id': await getCurrentUserId(),
+      };
+      print(
+          "bodyParamsForOtherDocumentationForm:::::$bodyParamsForOtherDocumentationForm");
+      http.Response? response = await editProfileApi(
+          bodyParams: bodyParamsForOtherDocumentationForm, image: selectedFile);
+      print(
+          "upload signup profile images ------------------${response!.statusCode}");
+      print("upload signup profile images ------------------${response!.body}");
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
+      if (jsonData['status'] == '1') {
+        context.replace(() => SignUpStep3Page());
+      } else {
+        print("False" + jsonData['message']);
+        showError(context, jsonData['message']);
+      }
+    } catch (e) {
+      print("Error:-" + e.toString());
+      showError(context, e);
+    }
+
+    setState(() {
+      btnLoading = false;
+    });
+  }
+
+  /// Edit Profile  Api Calling .....
+  static Future<http.Response?> editProfileApi(
+      {void Function(int)? checkResponse,
+      Map<String, dynamic>? bodyParams,
+      List<File>? image}) async {
+    http.Response? response = await MyHttp.multipart(
+        bodyParams: bodyParams,
+        url: 'https://dcmdmobilenotary.com/laravel/api/new_agent_quick_step_2',
+        images: image,
+        imageKey: 'attachment[]'
+        //checkResponse: checkResponse,
+        );
+    print("image response:-" + response!.body.toString());
+    return response;
   }
 }

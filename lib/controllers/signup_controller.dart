@@ -1,7 +1,8 @@
-import 'package:notary_agent_app/apis/firebasesetup.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../import.dart';
+import '../screens/auth/upload_signup_profile.dart';
 
 class SignupController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -45,62 +46,71 @@ class SignupController extends GetxController {
     refresh();
   }
 
+  String? _cnfPassword;
+  set cnfPassword(String val) {
+    _cnfPassword = val;
+    refresh();
+  }
+
   Future<void> signup(BuildContext context) async {
     if (formKey.currentState?.validate() != true) {
       return;
-    }
-    formKey.currentState!.save();
-    _loading = true;
-    refresh();
-    try {
-      String device_type = '';
-      if (Platform.isAndroid){
-        device_type='ANDROID';
-      }
-      else if(Platform.isIOS){
-        device_type='IOS';
-      }
-      var res = await api().post(
-        'signup_user',
-        data: {
-          "first_name": _firstName,
+    } else {
+      formKey.currentState!.save();
+      _loading = true;
+      refresh();
+      if (_password!.toString() == _cnfPassword!.toString()) {
+        formKey.currentState!.save();
+        _loading = true;
+        refresh();
+        try {
+          String deviceToken =
+              await FirebaseMessaging.instance.getToken() ?? '';
+          var res = await api().post(
+            'signup_user',
+            data: {
+              "email": _email,
+              "password": _password,
+              /* "first_name": _firstName,
           "last_name": _lastName,
-          "email": _email,
-          "phone":_mobile,
-          "password": _password,
+          "phone": _mobile,
           "country": "Not Provided",
           "state": "Not Provided",
           "city": "Not Provided",
           "type": "AGENT",
           "mobile": _mobile,
           "address": "Not Provided",
-          "online_status":"OFFLINE",
-          "register_id":devicetoken  ,
-          "device_type":device_type
-        },
-      );
-      _loading = false;
-      print('SignUp responce:- ${res.data.toString()}');
-      if(res.data['status']=="true"){
-       // updateUserDetails()
-        refresh();
-        context.pop();
-       // context.replace(() => const HomeDrawer());
-        signUpLaunchUrl();
+          "online_status": "OFFLINE",  */
+              "register_id": deviceToken,
+              "device_type": 'ANDROID'
+            },
+          );
+          _loading = false;
+          print('SignUp responce:- ${res.data.toString()}');
+          if (res.data['status'] == "true") {
+            // updateUserDetails()
+            refresh();
+            // context.pop();
+            // context.replace(() => const HomeDrawer());
+            //signUpLaunchUrl();
+            context.replace(() => const UploadSignUpProfile());
+          } else {
+            showError(context, "can't signup");
+          }
+        } catch (e) {
+          _loading = false;
+          refresh();
+          showError(context, e);
+        }
+      } else {
+        showError(context, 'Password and conform password are not matched');
       }
-      else{
-        showError(context, "can't signup");
-      }
-
-    } catch (e) {
-      _loading = false;
-      refresh();
-      showError(context, e);
     }
   }
 
   Future<void> signUpLaunchUrl() async {
-    final Uri url = Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
+    final Uri url =
+        Uri.parse('https://dcmdmobilenotary.com/laravel/register_agent_new');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }

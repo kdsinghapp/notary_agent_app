@@ -7,8 +7,47 @@ import '../../import.dart';
 import '../agent/privacy.dart';
 import '../agent/terms.dart';
 
-class Signup extends StatelessWidget {
+class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SignupState();
+}
+
+class _SignupState extends State<Signup> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController cnfPasswordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
+  bool checkBox = false;
+  bool btnLoading = false;
+
+  Future<void> signup(BuildContext context) async {
+    try {
+      // String deviceToken = await FirebaseMessaging.instance.getToken() ?? '';
+      var res = await api().post(
+        'signup_user_new_app',
+        data: {
+          "email": emailController.text.toString(),
+          "phone": phoneController.text.toString(),
+          "password": passwordController.text.toString(),
+          //"register_id": deviceToken
+        },
+      );
+      print('SignUp responce:- ${res.data.toString()}');
+      if (res.data['status'] == "true") {
+        context.replace(() => const UploadSignUpProfile());
+      } else {
+        showError(context, "can't signup");
+      }
+    } catch (e) {
+      showError(context, e);
+    }
+    setState(() {
+      btnLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,121 +73,132 @@ class Signup extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: GetBuilder(
-          init: SignupController(),
-          builder: (SignupController controller) {
-            return Form(
-              key: controller.formKey,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/logo.png',
-                        height: context.width / 2, fit: BoxFit.contain),
-                    sbh(20),
-                    AppTextFormField(
-                        placeholder: "First Name",
-                        validator: Validators.required,
-                        onSaved: (val) => controller.firstName = val!),
-                    sbh(20),
-                    AppTextFormField(
-                        placeholder: "Last Name",
-                        validator: Validators.required,
-                        onSaved: (val) => controller.lastName = val!),
-                    sbh(20),
-                    AppTextFormField(
-                        placeholder: "Email",
-                        validator: Validators.required,
-                        onSaved: (val) => controller.email = val!),
-                    // sbh(20),
-                    // AppTextFormField(placeholder: "Phone Number", validator: Validators.required, onSaved: (val) => controller.mobile = val!),
-                    sbh(20),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: IntlPhoneField(
-                        validator: (valid) {
-                          return 'Phone Number';
-                        },
-                        decoration: InputDecoration(
-                          alignLabelWithHint: false,
-                          hintText: 'Phone Number',
-                          floatingLabelStyle:
-                              const TextStyle(color: Color(0xFF9B9B9B)),
-                          border: UnderlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(inputRadius)),
-                          fillColor: Colors.white,
-                          filled: true,
-                          labelStyle: const TextStyle(color: Color(0xFF7B6F72)),
-                        ),
-                        initialCountryCode: 'IN',
-                        onSaved: (phone) {
-                          controller.mobile =
-                              '${phone!.countryCode}${phone.number}';
-                          print("Phone:-" + phone.countryCode.toString());
-                        },
-                        onChanged: (phone) {
-                          controller.mobile =
-                              '${phone.countryCode}${phone.number}';
-                          print("Phone:-" + phone.completeNumber);
-                        },
-                        onCountryChanged: (countryCode) {},
-                      ),
-                    ),
-                    sbh(20),
-                    AppTextFormField(
-                      placeholder: "Password",
-                      validator: Validators.required,
-                      obscureText: true,
-                      onSaved: (val) => controller.password = val!,
-                    ),
-                    // sbh(20),
-                    // const AppTextFormField(placeholder: "Promo Code"),
-                    sbh(20),
-                    GestureDetector(
-                      onTap: () => controller.checkBox = !controller.checkBox,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(inputRadius)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                                value: controller.checkBox,
-                                onChanged: (v) => controller.checkBox = v!),
-                            sbw(10),
-                            Expanded(
-                                child:
-                                    // Text("Terms of use and the data is processed on the terms of the Priacy Policy for the purpose specified in the questions are",
-                                    //   style: const AppTextTheme(CC.grey1).heading6,),
-                                    myRichText(context)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    sbh(60),
-                    AppButton(
-                      onTap: () {
-                        //controller.signup(context);
-                        //signUpLaunchUrl();
-                        context.navigate(() => const UploadSignUpProfile());
-                      },
-                      text: "Signup",
-                      color: CC.buttonGrey,
-                      loading: controller.loading,
-                      disabled: !controller.checkBox,
-                    ),
-                    sbh(20),
-                  ],
+        child: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/logo.png',
+                    height: context.width / 2, fit: BoxFit.contain),
+                sbh(20),
+                AppTextFormField(
+                  placeholder: "Email",
+                  validator: Validators.required,
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                 ),
-              ),
-            );
-          },
+
+                sbh(20),
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: IntlPhoneField(
+                    validator: (valid) {
+                      return 'Phone Number';
+                    },
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      alignLabelWithHint: false,
+                      hintText: 'Phone Number',
+                      floatingLabelStyle:
+                          const TextStyle(color: Color(0xFF9B9B9B)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(inputRadius)),
+                      fillColor: Colors.white,
+                      filled: true,
+                      labelStyle: const TextStyle(color: Color(0xFF7B6F72)),
+                    ),
+                    initialCountryCode: 'IN',
+                    onSaved: (phone) {
+                      //phoneController.text = '${phone!.countryCode}${phone.number}';
+                      print("Phone:-" + phone!.countryCode.toString());
+                    },
+                    onChanged: (phone) {
+                      //phoneController.text = '${phone.countryCode}${phone.number}';
+                      print("Phone:-" + phone.completeNumber);
+                    },
+                    onCountryChanged: (countryCode) {},
+                  ),
+                ),
+                sbh(20),
+                AppTextFormField(
+                  placeholder: "Password",
+                  validator: Validators.required,
+                  controller: passwordController,
+                  obscureText: true,
+                  keyboardType: TextInputType.text,
+                  // onSaved: (val) => controller.password = val!,
+                ),
+                sbh(20),
+                AppTextFormField(
+                  placeholder: "Conform Password",
+                  validator: Validators.required,
+                  controller: cnfPasswordController,
+                  obscureText: true,
+                  keyboardType: TextInputType.text,
+                  //onSaved: (val) => controller.cnfPassword = val!,
+                ),
+                // const AppTextFormField(placeholder: "Promo Code"),
+                sbh(20),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(inputRadius)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                          value: checkBox,
+                          onChanged: (v) {
+                            setState(() {
+                              checkBox = v!;
+                            });
+                          }),
+                      sbw(10),
+                      Expanded(
+                          child:
+                              // Text("Terms of use and the data is processed on the terms of the Priacy Policy for the purpose specified in the questions are",
+                              //   style: const AppTextTheme(CC.grey1).heading6,),
+                              myRichText(context)),
+                    ],
+                  ),
+                ),
+                sbh(60),
+                AppButton(
+                  onTap: () {
+                    if (formKey.currentState?.validate() != true) {
+                      return;
+                    } else {
+                      formKey.currentState!.save();
+                      if (passwordController.text.toString() ==
+                          cnfPasswordController.text.toString()) {
+                        setState(() {
+                          btnLoading = true;
+                          signup(context);
+                        });
+                      } else {
+                        showError(context,
+                            'Password and conform password are not matched');
+                      }
+                    }
+
+                    //signUpLaunchUrl();
+                    //context.navigate(() => const UploadSignUpProfile());
+                  },
+                  text: "Signup",
+                  color: CC.buttonGrey,
+                  loading: btnLoading,
+                  disabled: !checkBox,
+                ),
+                sbh(20),
+              ],
+            ),
+          ),
         ),
       ),
     );

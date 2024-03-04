@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:notary_agent_app/models/UserProfileModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/LoginModel.dart';
@@ -13,6 +12,11 @@ void updateUserDetails(details) async {
   shared_User.setString('user_details', user);
 }
 
+void loginUser() async {
+  SharedPreferences shared_User = await SharedPreferences.getInstance();
+  shared_User.setString('login', 'Yes');
+}
+
 Future getUserDetails() async {
   SharedPreferences shared_User = await SharedPreferences.getInstance();
   String userMap = await shared_User.getString('user_details')!;
@@ -20,14 +24,14 @@ Future getUserDetails() async {
   Map<String, dynamic> user = jsonDecode(userS) as Map<String, dynamic>;
   return user; //.toString();// }
 }
+
 Future<LoginModel> getDriverDetails() async {
   SharedPreferences shared_User = await SharedPreferences.getInstance();
-  String userMap =shared_User.getString('user_details')!;
+  String userMap = shared_User.getString('user_details')!;
   String userS = (userMap == null) ? '' : userMap;
   Map<String, dynamic> user = jsonDecode(userS) as Map<String, dynamic>;
   return LoginModel.fromJson(user); //.toString();// }
 }
-
 
 Future getUserName() async {
   SharedPreferences shared_User = await SharedPreferences.getInstance();
@@ -38,12 +42,12 @@ Future getUserName() async {
   // }
 }
 
-Future getCurrentUserId() async {
+Future<String> getCurrentUserId() async {
   SharedPreferences shared_User = await SharedPreferences.getInstance();
   String? userMap = await shared_User.getString('user_details');
   String userS = (userMap == null) ? '' : userMap;
   Map<String, dynamic> user = jsonDecode(userS) as Map<String, dynamic>;
-  // log('this is '+user['user_id'])
+  log('this is ' + user['data']['id'].toString());
   return user['data']['id'].toString(); //.toString();
   // }
 }
@@ -55,7 +59,8 @@ void updateUserId(id) async {
 Future isUserLoggedIn() async {
   final sharedUser = await SharedPreferences.getInstance();
 
-  String? user = await sharedUser.getString('user_details');
+  //String? user = await sharedUser.getString('user_details');
+  String? user = await sharedUser.getString('login');
   log(user.toString());
 
   if (user == null) {
