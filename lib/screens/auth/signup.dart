@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:notary_agent_app/screens/auth/upload_signup_profile.dart';
+import 'package:notary_agent_app/widgets/ShowToast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../import.dart';
@@ -37,7 +37,8 @@ class _SignupState extends State<Signup> {
       );
       print('SignUp responce:- ${res.data.toString()}');
       if (res.data['status'] == "true") {
-        context.replace(() => const UploadSignUpProfile());
+        showToastMessage('Please login for the other details.');
+        context.replace(() => const Login());
       } else {
         showError(context, "can't signup");
       }
@@ -135,7 +136,7 @@ class _SignupState extends State<Signup> {
                 ),
                 sbh(20),
                 AppTextFormField(
-                  placeholder: "Conform Password",
+                  placeholder: "Confirm password",
                   validator: Validators.required,
                   controller: cnfPasswordController,
                   obscureText: true,

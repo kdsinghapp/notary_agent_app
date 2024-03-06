@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:notary_agent_app/screens/auth/signup_step3.dart';
+import 'package:notary_agent_app/widgets/ShowToast.dart';
 
 import '../../import.dart';
 import '../../utils/auth.dart';
@@ -399,6 +400,8 @@ class _UploadOtherDocumentState extends State<UploadOtherDocument> {
       print("upload signup profile images ------------------${response!.body}");
       Map<String, dynamic> jsonData = jsonDecode(response.body);
       if (jsonData['status'] == '1') {
+        showToastMessage(
+            'Successfully completed your upload documentation step.');
         context.replace(() => SignUpStep3Page());
       } else {
         print("False" + jsonData['message']);

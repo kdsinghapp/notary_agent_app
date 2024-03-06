@@ -4,6 +4,7 @@ import 'package:notary_agent_app/screens/auth/signup_step4.dart';
 import 'package:notary_agent_app/utils/constant_string.dart';
 
 import '../../utils/auth.dart';
+import '../../widgets/ShowToast.dart';
 
 class SignUpStep3Page extends StatefulWidget {
   const SignUpStep3Page({super.key});
@@ -458,6 +459,7 @@ class _SignUpStep3State extends State<SignUpStep3Page> {
     try {
       bodyParamsForSubmitSignUpStep3Form = {
         'agent_id': await getCurrentUserId(),
+        'user_id': await getCurrentUserId(),
         'Full_Name': fullNameController.text.toString(),
         'Business_name_or_disregarded_entity_name':
             businessNameController.text.toString(),
@@ -485,6 +487,7 @@ class _SignUpStep3State extends State<SignUpStep3Page> {
       print("res from signUp step3 ------------------${res.data}");
       print("status ------------------${res.data['status']}");
       if (res.data['status'] == '1') {
+        showToastMessage('Successfully completed your W9 step.');
         context.replace(() => SignUpStep4Page());
       } else {
         showError(context, res.data['message']);

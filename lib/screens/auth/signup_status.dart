@@ -285,7 +285,7 @@ class _SignUpStatusState extends State<SignUpStatus> {
               sbh(20),
               AppButton(
                 onTap: () {},
-                text: "NEXT",
+                text: "Verification Process ...",
                 color: Colors.indigoAccent,
                 loading: btnLoading,
                 borderRadius: BorderRadius.circular(25),

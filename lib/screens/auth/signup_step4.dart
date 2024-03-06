@@ -2,8 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:notary_agent_app/import.dart';
+import 'package:notary_agent_app/screens/auth/signup_step5.dart';
 import 'package:notary_agent_app/utils/constant_string.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../utils/auth.dart';
+import '../../widgets/ShowToast.dart';
 
 class SignUpStep4Page extends StatefulWidget {
   const SignUpStep4Page({super.key});
@@ -22,6 +26,8 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
   TextEditingController stateController = TextEditingController();
   TextEditingController zipCodeController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController alternativePhoneController = TextEditingController();
+  TextEditingController webUrlController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController licenseNumberController = TextEditingController();
   TextEditingController signingController = TextEditingController();
@@ -29,6 +35,12 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
   TextEditingController issueDateController = TextEditingController();
   TextEditingController expirationDateController = TextEditingController();
   TextEditingController signatureController = TextEditingController();
+  TextEditingController state1Controller = TextEditingController();
+  TextEditingController state2Controller = TextEditingController();
+  TextEditingController state3Controller = TextEditingController();
+  TextEditingController zip1Controller = TextEditingController();
+  TextEditingController zip2Controller = TextEditingController();
+  TextEditingController zip3Controller = TextEditingController();
   TextEditingController rName1Controller = TextEditingController();
   TextEditingController rName2Controller = TextEditingController();
   TextEditingController rName3Controller = TextEditingController();
@@ -283,6 +295,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                     validator: (valid) {
                       return 'Phone Number';
                     },
+                    controller: phoneController,
                     decoration: InputDecoration(
                       alignLabelWithHint: false,
                       hintText: 'Phone Number',
@@ -297,17 +310,53 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                     ),
                     initialCountryCode: 'IN',
                     onSaved: (phone) {
-                      phoneController.text =
-                          '${phone!.countryCode}${phone.number}';
-                      print("Phone:-" + phone.countryCode.toString());
+                      print("Phone:-" + phone!.countryCode.toString());
                     },
                     onChanged: (phone) {
-                      phoneController.text =
-                          '${phone.countryCode}${phone.number}';
                       print("Phone:-" + phone.completeNumber);
                     },
                     onCountryChanged: (countryCode) {},
                   ),
+                ),
+                sbh(10),
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: IntlPhoneField(
+                    validator: (valid) {
+                      return 'Alternate Number';
+                    },
+                    controller: alternativePhoneController,
+                    decoration: InputDecoration(
+                      alignLabelWithHint: false,
+                      hintText: 'Alternate Number',
+                      floatingLabelStyle:
+                          const TextStyle(color: Color(0xFF9B9B9B)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(inputRadius)),
+                      fillColor: Colors.white,
+                      filled: true,
+                      labelStyle: const TextStyle(color: Color(0xFF7B6F72)),
+                    ),
+                    initialCountryCode: 'IN',
+                    onSaved: (phone) {
+                      print("Phone:-" + phone!.countryCode.toString());
+                    },
+                    onChanged: (phone) {
+                      print("Phone:-" + phone.completeNumber);
+                    },
+                    onCountryChanged: (countryCode) {},
+                  ),
+                ),
+                sbh(15),
+                AppTextFormField(
+                  placeholder: "Enter website url here",
+                  label: 'WEBSITE URL',
+                  labelColor: Colors.white,
+                  controller: webUrlController,
+                  keyboardType: TextInputType.text,
                 ),
                 sbh(15),
                 AppTextFormField(
@@ -511,7 +560,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'STATE',
                         validator: Validators.required,
-                        controller: stateController,
+                        controller: state1Controller,
                         keyboardType: TextInputType.text,
                       ),
                     ),
@@ -522,7 +571,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'ZIP CODE',
                         validator: Validators.required,
-                        controller: zipCodeController,
+                        controller: zip1Controller,
                         keyboardType: TextInputType.number,
                       ),
                     ),
@@ -538,7 +587,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'STATE',
                         validator: Validators.required,
-                        controller: stateController,
+                        controller: state2Controller,
                         keyboardType: TextInputType.text,
                       ),
                     ),
@@ -549,7 +598,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'ZIP CODE',
                         validator: Validators.required,
-                        controller: zipCodeController,
+                        controller: zip2Controller,
                         keyboardType: TextInputType.number,
                       ),
                     ),
@@ -565,7 +614,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'STATE',
                         validator: Validators.required,
-                        controller: stateController,
+                        controller: state3Controller,
                         keyboardType: TextInputType.text,
                       ),
                     ),
@@ -576,7 +625,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         labelColor: Colors.white,
                         label: 'ZIP CODE',
                         validator: Validators.required,
-                        controller: zipCodeController,
+                        controller: zip3Controller,
                         keyboardType: TextInputType.number,
                       ),
                     ),
@@ -772,7 +821,7 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                         label: 'FULL NAME',
                         validator: Validators.required,
                         controller: fullNameController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                       ),
                     ),
                     Expanded(
@@ -828,6 +877,10 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
                 AppButton(
                   onTap: () {
                     if (formKey.currentState!.validate()) {
+                      setState(() {
+                        btnLoading = true;
+                        callingSubmitSignUpStep4Form();
+                      });
                     } else {
                       showError(context, 'Please complete all field ...');
                     }
@@ -878,31 +931,103 @@ class _SignUpStep4State extends State<SignUpStep4Page> {
   }
 
   Future<void> callingSubmitSignUpStep4Form() async {
-    bodyParamsForSubmitSignUpStep4Form = {
-      'id': 'userId',
-      'first_name': firstNameController.text.toString(),
-      'last_name': lastNameController.text.toString(),
-      'street': streetController.text.toString(),
-      'suite': suiteController.text.toString(),
-      'country': countryController.text.toString(),
-      'city': cityController.text.toString(),
-      'zipcode': zipCodeController.text.toString(),
-      'state': stateController.text.toString(),
-      // 'mobile': businessInfoController.text.toString(),
-      // 'account_info': accountInfoController.text.toString(),
-      // 'social_security': securityNumberController.text.toString(),
-      // 'identyNumber': indentyNumberController.text.toString(),
-      // 'usa_person': usaPersonNameController.text.toString(),
-      'date': dateController.text.toString(),
-      'signature': signatureController.text.toString(),
-    };
-    print(
-        "bodyParamsForSubmitSignUpStep3Form:::::$bodyParamsForSubmitSignUpStep4Form");
-    var res =
-        await api().post('signup4', data: bodyParamsForSubmitSignUpStep4Form);
+    try {
+      bodyParamsForSubmitSignUpStep4Form = {
+        'agent_id': await getCurrentUserId(),
+        'user_id': await getCurrentUserId(),
+        'Full_Name':
+            '${firstNameController.text.toString()} ${lastNameController.text.toString()}',
+        'Business_name_or_disregarded_entity_name': '',
+        'Federal_Tax_Classification': '',
+        'Exempt_Payee_Code': '',
+        'Exemption_from_FATCA_reporting_code': '',
+        'Address': streetController.text.toString(),
+        'Suite': suiteController.text.toString(),
+        'County': countryController.text.toString(),
+        'country_code': 'US',
+        'city': cityController.text.toString(),
+        'Zip_Code': zipCodeController.text.toString(),
+        'State': stateController.text.toString(),
+        'Email_Address': emailController.text.toString(),
+        'Mobile_Number': phoneController.text.toString(),
+        'Alternate_Number': alternativePhoneController.text.toString(),
+        'Website_URL': webUrlController.text.toString(),
+        'General_Information': '',
+        'Notary_License_or_Commission_Number:':
+            licenseNumberController.text.toString(),
+        'Issued_Date': issueDateController.text.toString(),
+        'Expiration_Date': expirationDateController.text.toString(),
+        'Other_than_English_textarea': '',
+        'radio': '',
+        'Who_is_your_wireless_carrier': '',
+        'Are_you_available_to_conduct_day_and_evening_signs': 'Yes',
+        'checkboxVal': checkValueOfCheckBar(),
+        'Approximately_how_many_loan_document_signings_have_you_completed': '',
+        'How_many_closings_or_siblings_can_you_complete_in_a_day': "5",
+        'Have_you_had_any_claims': 'No',
+        'Have_you_ever_been_convicted': 'No',
+        'Do_you_agree_to_maintain': 'Yes',
+        'State_1': state1Controller.text.toString(),
+        'State_2': state2Controller.text.toString(),
+        'State_3': state3Controller.text.toString(),
+        'State_4': state3Controller.text.toString(),
+        'Zip_Codes_or_Countries_1': zip1Controller.text.toString(),
+        'Zip_Codes_or_Countries_2': zip2Controller.text.toString(),
+        'Zip_Codes_or_Countries_3': zip3Controller.text.toString(),
+        'Zip_Codes_or_Countries_4': zip3Controller.text.toString(),
+        'Refinances': 'Yes',
+        'Comments': 'Some comments about refinances',
+        'Reverse_Mortgage': 'Yes',
+        'Comments_Reverse_Mortgage': 'Some comments about reverse mortgage',
+        'Purchase': 'Yes',
+        'Comments__Purchase': 'Some comments about purchase',
+        'REO': 'Yes',
+        'Comments_REO': 'Some comments about REO',
+        'Equity_or_HELOC': 'Yes',
+        'Comments_Equity_or_HELOC': 'Some comments about equity or HELOC',
+        'E_Sign_Capability': 'Yes',
+        'Comments_E_Sign_Capability': 'Some comments about e-sign capability',
+        'Notary_Signings': signingController.text.toString(),
+        'references_Name_1': rName1Controller.text.toString(),
+        'references_email_address_1': rEmail1Controller.text.toString(),
+        'references_Contact_Number_1': rPhone1Controller.text.toString(),
+        'references_Comments_1': rComment1Controller.text.toString(),
+        'references_Name_2': rName2Controller.text.toString(),
+        'references_email_address_2': rEmail2Controller.text.toString(),
+        'references_Contact_Number_2': rPhone2Controller.text.toString(),
+        'references_Comments_2': rComment2Controller.text.toString(),
+        'references_Name_3': rName3Controller.text.toString(),
+        'references_email_address_3': rEmail3Controller.text.toString(),
+        'references_Contact_Number_3': rPhone3Controller.text.toString(),
+        'references_Comments_3': rComment3Controller.text.toString(),
+        'Any_additional_comments_you_would_like_to_provide':
+            'Some additional comments',
+        'Signature_Full': fullNameController.text.toString(),
+        'Signature_Date': dateController.text.toString(),
+        'Signature': signatureController.text.toString(),
+      };
+      print(
+          "bodyParamsForSubmitSignUpStep4Form:::::$bodyParamsForSubmitSignUpStep4Form");
+      var res = await api().post('new_agent_quick_step_4',
+          data: bodyParamsForSubmitSignUpStep4Form);
 
+      print("res from signUp step4 ------------------${res.data}");
+      print("status ------------------${res.data['status']}");
+      if (res.data['status'] == '1') {
+        showToastMessage('Successfully completed your application step.');
+        context.replace(() => SignUpStep5Page());
+      } else {
+        showError(context, res.data['message']);
+      }
+    } catch (e) {
+      showError(context, e.toString());
+    }
     setState(() {
       btnLoading = false;
     });
+  }
+
+  String checkValueOfCheckBar() {
+    return "";
   }
 }

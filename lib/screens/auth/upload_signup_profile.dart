@@ -4,6 +4,7 @@ import 'package:notary_agent_app/screens/auth/upload_other_document.dart';
 import '../../import.dart';
 import '../../utils/auth.dart';
 import '../../utils/http_methods.dart';
+import '../../widgets/ShowToast.dart';
 import '../../widgets/dotted_border.dart';
 
 class UploadSignUpProfile extends StatefulWidget {
@@ -411,6 +412,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
 
   Future<void> uploadProfileApi(List<File>? selectedFile) async {
     try {
+      print("Starting....");
       bodyParamsForNormalSignUpForm = {
         'agent_id': await getCurrentUserId(),
       };
@@ -422,6 +424,7 @@ class _UploadSignUpProfileState extends State<UploadSignUpProfile> {
       print("upload signup profile images ------------------${response!.body}");
       Map<String, dynamic> jsonData = jsonDecode(response.body);
       if (jsonData['status'] == '1') {
+        showToastMessage('Successfully completed your upload profile step.');
         context.replace(() => UploadOtherDocument());
       } else {
         print("False" + jsonData['message']);

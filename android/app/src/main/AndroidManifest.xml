@@ -35,6 +35,7 @@
     </queries>
    <application
         android:label="notary_agent_app"
+        android:enableOnBackInvokedCallback="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notary_agent_app/models/LoginModel.dart';
+import 'package:notary_agent_app/screens/auth/signup_status.dart';
 import 'package:notary_agent_app/screens/auth/signup_step3.dart';
 import 'package:notary_agent_app/screens/auth/upload_other_document.dart';
 import 'package:notary_agent_app/screens/auth/upload_signup_profile.dart';
@@ -63,11 +64,19 @@ class LoginController extends GetxController {
         } else if (model.data!.agentStep5 == 0) {
           context.replace(() => SignUpStep5Page());
         } else {
-          loginUser();
-          context.pop();
-          context.replace(() => NewDashboardScreen(
-                isRequest: false,
-              ));
+          if (model.data!.agentStep1Admin == 1 &&
+              model.data!.agentStep2Admin == 1 &&
+              model.data!.agentStep3Admin == 1 &&
+              model.data!.agentStep4Admin == 1 &&
+              model.data!.agentStep5Admin == 1) {
+            loginUser();
+            context.pop();
+            context.replace(() => NewDashboardScreen(
+                  isRequest: false,
+                ));
+          } else {
+            context.replace(() => SignUpStatus());
+          }
         }
 
         // var userrr = await getUserDetails();
